@@ -40,7 +40,6 @@ public class Product {
     private BigDecimal pricePerUnit;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "category_id")
     private Category category;
 
     @NotEmpty(message = "Country of origin is required")
