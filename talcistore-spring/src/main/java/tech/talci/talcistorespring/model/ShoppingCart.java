@@ -1,20 +1,17 @@
 package tech.talci.talcistorespring.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -22,8 +19,11 @@ public class ShoppingCart {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private String cartId;
+    private Long id;
 
     @OneToMany(fetch = LAZY)
     private List<Product> products;
+
+    @OneToOne(fetch = LAZY)
+    private User user;
 }

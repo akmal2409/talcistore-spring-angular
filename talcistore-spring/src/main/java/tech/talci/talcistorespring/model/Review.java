@@ -1,6 +1,7 @@
 package tech.talci.talcistorespring.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Review {
 
     @Id
@@ -25,9 +27,11 @@ public class Review {
     private Long id;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @DecimalMin(value = "1.0", inclusive = true, message = "Rating cannot be less than 1.0")
@@ -43,54 +47,4 @@ public class Review {
     public void setupDate() {
         this.date = LocalDate.now();
     }
-
-    public static ReviewBuilder builder() {
-        return  new ReviewBuilder();
-    }
-
-    public static class ReviewBuilder {
-        private Long id;
-        private User user;
-        private Product product;
-        private Double rating;
-        private String comment;
-        private LocalDate date;
-
-        private ReviewBuilder() {}
-
-        public ReviewBuilder id(Long id) {
-            this.id = id;
-            return this;
-        }
-
-        public ReviewBuilder user(User user) {
-            this.user = user;
-            return this;
-        }
-
-        public ReviewBuilder product(Product product) {
-            this.product = product;
-            return this;
-        }
-
-        public ReviewBuilder rating(Double rating) {
-            this.rating = rating;
-            return this;
-        }
-
-        public ReviewBuilder comment(String comment) {
-            this.comment = comment;
-            return this;
-        }
-
-        public ReviewBuilder date(LocalDate date) {
-            this.date = date;
-            return this;
-        }
-
-        public Review build() {
-            return new Review(id, user, product, rating, comment, date);
-        }
-    }
-
 }

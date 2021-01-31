@@ -8,17 +8,18 @@ import javax.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
-import static tech.talci.talcistorespring.model.OrderStatus.PROCESSED;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "customer_orders")
 public class Order {
 
     @Id
@@ -36,13 +37,12 @@ public class Order {
     private String trackingNumber;
 
     @Enumerated(value = STRING)
-    private OrderStatus status;
+    private OrderStatus orderStatus;
 
     private BigDecimal totalPrice;
 
     @PrePersist
     public void setupOrder() {
         this.placedOn = LocalDate.now();
-        this.status = PROCESSED;
     }
 }

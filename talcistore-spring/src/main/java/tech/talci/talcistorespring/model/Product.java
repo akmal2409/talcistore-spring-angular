@@ -1,8 +1,11 @@
 package tech.talci.talcistorespring.model;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UpdateTimestamp;
+
 
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
@@ -11,8 +14,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -20,20 +26,22 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Product {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private Long productId;
+    private Long id;
 
     @NotEmpty(message = "Product name is required")
-    private String name;
+    private String productName;
 
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than {value}")
-    private BigDecimal price;
+    private BigDecimal pricePerUnit;
 
-    @ManyToMany(fetch = LAZY, mappedBy = "products")
-    private List<Category> categories;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @NotEmpty(message = "Country of origin is required")
     private String countryOfOrigin;
@@ -42,71 +50,23 @@ public class Product {
     private String producer;
 
     @Min(value = 0, message = "Amount in stock must be greater than {value}")
-    private Integer leftInStock;
+    private Long leftInStock;
 
     @DecimalMax(value = "5.0", inclusive = true, message = "Rating cannot be greater than 5.0")
     @DecimalMin(value = "1.0", inclusive = true, message = "Rating cannot be smaller than 1.0")
     private Double rating;
 
-    public static ProductBuilder builder() {
-        return new ProductBuilder();
-    }
+    private Long orderCount;
 
-    public static class ProductBuilder {
-        private Long id;
-        private String name;
-        private BigDecimal price;
-        private List<Category> categories;
-        private String countryOfOrigin;
-        private String producer;
-        private Integer leftInStock;
-        private Double rating;
+    private LocalDate addedOn;
 
-        private ProductBuilder() {}
+    @UpdateTimestamp
+    private LocalDate lastUpdated;
 
-        public ProductBuilder id(Long id) {
-            this.id = id;
-            return this;
-        }
 
-        public ProductBuilder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public ProductBuilder price(BigDecimal price) {
-            this.price = price;
-            return this;
-        }
-
-        public ProductBuilder category(List<Category> categories) {
-            this.categories = categories;
-            return this;
-        }
-
-        public ProductBuilder countryOfOrigin(String countryOfOrigin) {
-            this.countryOfOrigin = countryOfOrigin;
-            return this;
-        }
-
-        public ProductBuilder producer(String producer) {
-            this.producer = producer;
-            return this;
-        }
-
-        public ProductBuilder leftInStock(Integer leftInStock) {
-            this.leftInStock = leftInStock;
-            return this;
-        }
-
-        public ProductBuilder rating(Double rating) {
-            this.rating = rating;
-            return this;
-        }
-
-        public Product build() {
-            return new Product(id, name, price, categories,
-                    countryOfOrigin, producer, leftInStock, rating);
-        }
+    @PrePersist
+    private void setupProduct() {
+        this.orderCount = 0L;
+        this.addedOn = LocalDate.now();
     }
 }
