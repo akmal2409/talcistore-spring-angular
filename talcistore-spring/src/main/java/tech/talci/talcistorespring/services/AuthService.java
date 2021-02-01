@@ -162,4 +162,11 @@ public class AuthService {
 
         return new AuthenticationResponse(jwt, authentication.getName());
     }
+
+    public User getCurrentUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        return userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User was not found"));
+    }
 }
