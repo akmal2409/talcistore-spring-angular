@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.talci.talcistorespring.controllers.AuthController;
+import tech.talci.talcistorespring.dto.AuthenticationResponse;
 import tech.talci.talcistorespring.dto.LoginRequest;
 import tech.talci.talcistorespring.dto.RegisterRequest;
 import tech.talci.talcistorespring.exceptions.AccountVerificationFailedException;
@@ -21,6 +22,7 @@ import tech.talci.talcistorespring.repositories.CustomerDetailsRepository;
 import tech.talci.talcistorespring.repositories.RoleRepository;
 import tech.talci.talcistorespring.repositories.UserRepository;
 import tech.talci.talcistorespring.repositories.VerificationTokenRepository;
+import tech.talci.talcistorespring.security.JwtProvider;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -38,6 +40,7 @@ public class AuthService {
     private final CustomerDetailsRepository customerDetailsRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
+    private final JwtProvider jwtProvider;
 
     @Transactional
     public void singUp(RegisterRequest registerRequest) {
@@ -147,7 +150,7 @@ public class AuthService {
         sendActivationEmail(user, token);
     }
 
-    public void authenticate(LoginRequest loginRequest) {
+    public AuthenticationResponse authenticate(LoginRequest loginRequest) {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),
@@ -155,5 +158,8 @@ public class AuthService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
+        String jwt = jwtProvider.generateToken(authentication);
+
+        return new AuthenticationResponse(jwt, authentication.getName());
     }
 }

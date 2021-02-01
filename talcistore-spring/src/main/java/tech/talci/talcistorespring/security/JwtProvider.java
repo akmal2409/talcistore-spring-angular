@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import tech.talci.talcistorespring.exceptions.TalciStoreException;
 
 import javax.annotation.PostConstruct;
@@ -16,8 +17,7 @@ import java.security.cert.CertificateException;
 
 import static io.jsonwebtoken.Jwts.parser;
 
-@Component
-@RequiredArgsConstructor
+@Service
 public class JwtProvider {
 
     private KeyStore keyStore;
@@ -26,7 +26,7 @@ public class JwtProvider {
     void init() {
         try {
             keyStore = KeyStore.getInstance("JKS");
-            InputStream resourceAsStream = getClass().getResourceAsStream("/talcistore.jks");
+            InputStream resourceAsStream = getClass().getResourceAsStream("/talcistore.jsk");
             keyStore.load(resourceAsStream, "01041955".toCharArray());
         } catch (IOException | NoSuchAlgorithmException | KeyStoreException | CertificateException e) {
             throw new TalciStoreException("There was a problem loading the keystore");

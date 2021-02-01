@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.talci.talcistorespring.dto.AuthenticationResponse;
 import tech.talci.talcistorespring.dto.LoginRequest;
 import tech.talci.talcistorespring.dto.RegisterRequest;
 import tech.talci.talcistorespring.services.AuthService;
@@ -39,8 +40,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public void authenticate(@RequestBody LoginRequest loginRequest) {
-        authService.authenticate(loginRequest);
+    public AuthenticationResponse authenticate(@RequestBody LoginRequest loginRequest) {
+        return authService.authenticate(loginRequest);
     }
 
     @GetMapping("/check-username/{username}")
