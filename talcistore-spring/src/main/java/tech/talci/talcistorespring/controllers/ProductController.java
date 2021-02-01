@@ -9,4 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ProductController {
     public static final String BASE_URL = "/api/products";
+
+
 }
