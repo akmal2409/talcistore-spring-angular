@@ -36,6 +36,9 @@ public class Product {
     @NotEmpty(message = "Product name is required")
     private String productName;
 
+    @ManyToOne(fetch = LAZY)
+    private User seller;
+
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than {value}")
     private BigDecimal pricePerUnit;
 

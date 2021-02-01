@@ -3,7 +3,6 @@ package tech.talci.talcistorespring.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tech.talci.talcistorespring.model.Category;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -24,4 +23,5 @@ public class ProductDto {
     private Long orderCount;
     private LocalDate addedOn;
     private LocalDate lastUpdated;
+    private Long sellerId;
 }
