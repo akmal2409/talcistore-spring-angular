@@ -24,6 +24,12 @@ public class AuthController {
     @GetMapping("/verify-account/{token}")
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
         authService.verifyAccount(token);
-        return new ResponseEntity<>("Account was successfully activated!", HttpStatus.OK);
+        return new ResponseEntity<>("Account was successfully activated", HttpStatus.OK);
+    }
+
+    @GetMapping("/request-verification-code/{email}")
+    public ResponseEntity<String> resendVerificationCode(@PathVariable String email) {
+        authService.resendVerificationToken(email);
+        return new ResponseEntity<>("Activation email with code was sent", HttpStatus.OK);
     }
 }

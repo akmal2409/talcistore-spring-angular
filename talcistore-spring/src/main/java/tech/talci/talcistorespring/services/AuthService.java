@@ -7,10 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.talci.talcistorespring.controllers.AuthController;
 import tech.talci.talcistorespring.dto.RegisterRequest;
-import tech.talci.talcistorespring.exceptions.AuthenticationException;
+import tech.talci.talcistorespring.exceptions.AccountVerificationFailedException;
+import tech.talci.talcistorespring.exceptions.AuthenticationFailedException;
+import tech.talci.talcistorespring.exceptions.ResourceNotFoundException;
+import tech.talci.talcistorespring.model.CustomerDetails;
 import tech.talci.talcistorespring.model.NotificationEmail;
 import tech.talci.talcistorespring.model.User;
 import tech.talci.talcistorespring.model.VerificationToken;
+import tech.talci.talcistorespring.repositories.CustomerDetailsRepository;
 import tech.talci.talcistorespring.repositories.UserRepository;
 import tech.talci.talcistorespring.repositories.VerificationTokenRepository;
 
@@ -25,6 +29,7 @@ public class AuthService {
     private String websiteUrl;
     private final UserRepository userRepository;
     private final VerificationTokenRepository tokenRepository;
+    private final CustomerDetailsRepository customerDetailsRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
 
@@ -32,7 +37,7 @@ public class AuthService {
     public void singUp(RegisterRequest registerRequest) {
         if (!isEmailAvailable(registerRequest.getEmail())
                 || !isUsernameAvailable(registerRequest.getUsername())) {
-            throw new AuthenticationException("Username or email is already taken");
+            throw new AuthenticationFailedException("Username or email is already taken");
         }
 
         User createdUser = User.builder()
@@ -48,12 +53,16 @@ public class AuthService {
         String token = generateVerificationToken(savedUser);
 
         sendActivationEmail(savedUser, token);
+
+        CustomerDetails customerDetails = new CustomerDetails();
+        customerDetails.setUser(savedUser);
+        customerDetailsRepository.save(customerDetails);
     }
 
     public void verifyAccount(String token) {
         VerificationToken verificationToken =
                 tokenRepository.findVerificationTokenByToken(token)
-                .orElseThrow(() -> new AuthenticationException("Activation token is invalid"));
+                .orElseThrow(() -> new AuthenticationFailedException("Activation token is invalid"));
 
         fetchAndEnableUser(verificationToken);
     }
@@ -62,7 +71,12 @@ public class AuthService {
     public void fetchAndEnableUser(VerificationToken token) {
         User fetchedUser =
                 userRepository.findUserByUsername(token.getUser().getUsername())
-                        .orElseThrow(() -> new AuthenticationException("User was not found. Invalid token"));
+                        .orElseThrow(() -> new AuthenticationFailedException("User was not found. Invalid token"));
+
+        if (fetchedUser.isEnabled()) {
+            throw new AccountVerificationFailedException("Account has been already verified");
+        }
+
         fetchedUser.setEnabled(true);
         userRepository.save(fetchedUser);
     }
@@ -74,7 +88,7 @@ public class AuthService {
                 .body("Welcome to Talci Store. We are the biggest online retailer in the entire Europe!" +
                         " Thank you for choosing us, we will not let you down." +
                         " To start your journey, please activate your account by clicking the link below: \n" +
-                        websiteUrl + AuthController.BASE_URL + "/verify-account" + token)
+                        websiteUrl + AuthController.BASE_URL + "/verify-account/" + token)
                 .build();
 
         mailService.sendMail(email);
@@ -105,5 +119,19 @@ public class AuthService {
         Optional<User> optionalUser = userRepository.findUserByUsername(username);
 
         return optionalUser.isEmpty();
+    }
+
+    @Transactional
+    public void resendVerificationToken(String email) {
+        User user = userRepository.findUserByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User with email " + email + " was not found"));
+
+        if (user.isEnabled()) {
+           throw new AccountVerificationFailedException("Account has been already verified");
+        }
+
+        String token = generateVerificationToken(user);
+
+        sendActivationEmail(user, token);
     }
 }

@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
+import java.util.List;
+
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
@@ -25,4 +28,8 @@ public class Category {
 
     @NotEmpty(message = "Category description is required")
     private String description;
+
+    @OneToMany(fetch = LAZY)
+    @JoinColumn(name = "product_id")
+    private List<Product> products;
 }
