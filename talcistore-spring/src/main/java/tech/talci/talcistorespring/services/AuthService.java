@@ -18,10 +18,7 @@ import tech.talci.talcistorespring.exceptions.AuthenticationFailedException;
 import tech.talci.talcistorespring.exceptions.ResourceNotFoundException;
 import tech.talci.talcistorespring.exceptions.TalciStoreException;
 import tech.talci.talcistorespring.model.*;
-import tech.talci.talcistorespring.repositories.CustomerDetailsRepository;
-import tech.talci.talcistorespring.repositories.RoleRepository;
-import tech.talci.talcistorespring.repositories.UserRepository;
-import tech.talci.talcistorespring.repositories.VerificationTokenRepository;
+import tech.talci.talcistorespring.repositories.*;
 import tech.talci.talcistorespring.security.JwtProvider;
 
 import java.util.Optional;
@@ -38,6 +35,7 @@ public class AuthService {
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final CustomerDetailsRepository customerDetailsRepository;
+    private final ShoppingCartRepository shoppingCartRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
     private final JwtProvider jwtProvider;
@@ -91,7 +89,12 @@ public class AuthService {
 
         CustomerDetails customerDetails = new CustomerDetails();
         customerDetails.setUser(fetchedUser);
+        fetchedUser.setCustomerDetails(customerDetails);
 
+        ShoppingCart cart = new ShoppingCart();
+        cart.setUser(fetchedUser);
+
+        shoppingCartRepository.save(cart);
         customerDetailsRepository.save(customerDetails);
         userRepository.save(fetchedUser);
     }

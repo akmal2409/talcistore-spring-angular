@@ -14,6 +14,9 @@ public class ProductController {
     public static final String BASE_URL = "/api/products";
     private final ProductService productService;
 
+    //TODO: Pagination of products
+    //TODO: Add UserController for the management purposes
+
     @PostMapping
     public void createProduct(@RequestBody ProductDto productDto) {
         productService.save(productDto);

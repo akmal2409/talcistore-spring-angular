@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -16,11 +17,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import tech.talci.talcistorespring.controllers.AuthController;
+import tech.talci.talcistorespring.controllers.CategoryController;
 import tech.talci.talcistorespring.controllers.ProductController;
 import tech.talci.talcistorespring.security.JwtRequestFilter;
 
 @EnableWebSecurity
 @Configuration
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -35,10 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .mvcMatchers(HttpMethod.GET, ProductController.BASE_URL + "/**")
                 .permitAll()
-                .mvcMatchers(HttpMethod.POST, ProductController.BASE_URL + "/**")
-                .hasRole("ADMIN")
-                .mvcMatchers(HttpMethod.DELETE, ProductController.BASE_URL + "/**")
-                .hasRole("ADMIN")
+                .mvcMatchers(HttpMethod.GET, CategoryController.BASE_URL + "/**")
+                .permitAll()
                 .anyRequest()
                 .authenticated();
 

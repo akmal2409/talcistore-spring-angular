@@ -36,6 +36,9 @@ public class Product {
     @NotEmpty(message = "Product name is required")
     private String productName;
 
+    @NotEmpty(message = "Description is required")
+    private String description;
+
     @ManyToOne(fetch = LAZY)
     private User seller;
 
@@ -70,5 +73,6 @@ public class Product {
     private void setupProduct() {
         this.orderCount = 0L;
         this.addedOn = LocalDate.now();
+        this.rating = 1.0;
     }
 }

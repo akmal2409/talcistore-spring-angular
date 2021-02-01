@@ -34,7 +34,9 @@ public class ProductService {
                         + productDto.getCategoryId() + " was not found"));
 
         Product product = productMapper.mapToProduct(productDto, category, user);
+        category.getProducts().add(product);
 
+        categoryRepository.save(category);
         productRepository.save(product);
     }
 
