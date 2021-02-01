@@ -11,8 +11,8 @@ import javax.persistence.Id;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Role {
 
@@ -21,4 +21,11 @@ public class Role {
     private Long id;
     private String name;
     private String description;
+
+    public static Role of(String roleName, String roleDescription) {
+        Role role = new Role();
+        role.setName(roleName);
+        role.setDescription(roleDescription);
+        return role;
+    }
 }

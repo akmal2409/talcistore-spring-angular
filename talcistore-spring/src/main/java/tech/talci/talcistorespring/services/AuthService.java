@@ -10,11 +10,10 @@ import tech.talci.talcistorespring.dto.RegisterRequest;
 import tech.talci.talcistorespring.exceptions.AccountVerificationFailedException;
 import tech.talci.talcistorespring.exceptions.AuthenticationFailedException;
 import tech.talci.talcistorespring.exceptions.ResourceNotFoundException;
-import tech.talci.talcistorespring.model.CustomerDetails;
-import tech.talci.talcistorespring.model.NotificationEmail;
-import tech.talci.talcistorespring.model.User;
-import tech.talci.talcistorespring.model.VerificationToken;
+import tech.talci.talcistorespring.exceptions.TalciStoreException;
+import tech.talci.talcistorespring.model.*;
 import tech.talci.talcistorespring.repositories.CustomerDetailsRepository;
+import tech.talci.talcistorespring.repositories.RoleRepository;
 import tech.talci.talcistorespring.repositories.UserRepository;
 import tech.talci.talcistorespring.repositories.VerificationTokenRepository;
 
@@ -29,6 +28,7 @@ public class AuthService {
     private String websiteUrl;
     private final UserRepository userRepository;
     private final VerificationTokenRepository tokenRepository;
+    private final RoleRepository roleRepository;
     private final CustomerDetailsRepository customerDetailsRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
@@ -53,10 +53,6 @@ public class AuthService {
         String token = generateVerificationToken(savedUser);
 
         sendActivationEmail(savedUser, token);
-
-        CustomerDetails customerDetails = new CustomerDetails();
-        customerDetails.setUser(savedUser);
-        customerDetailsRepository.save(customerDetails);
     }
 
     public void verifyAccount(String token) {
@@ -77,7 +73,17 @@ public class AuthService {
             throw new AccountVerificationFailedException("Account has been already verified");
         }
 
+        Role userRole = roleRepository.findRoleByName("USER")
+                .orElseThrow(() -> new TalciStoreException("Roles must be defined by the administrator"));
+
+
         fetchedUser.setEnabled(true);
+        fetchedUser.getRoles().add(userRole);
+
+        CustomerDetails customerDetails = new CustomerDetails();
+        customerDetails.setUser(fetchedUser);
+
+        customerDetailsRepository.save(customerDetails);
         userRepository.save(fetchedUser);
     }
 

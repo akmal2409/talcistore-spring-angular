@@ -4,8 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tech.talci.talcistorespring.dto.LoginRequest;
 import tech.talci.talcistorespring.dto.RegisterRequest;
 import tech.talci.talcistorespring.services.AuthService;
+
+import java.util.Collections;
+import java.util.Map;
+
+import static java.util.Collections.singletonMap;
 
 @RestController
 @RequestMapping(AuthController.BASE_URL)
@@ -31,5 +37,20 @@ public class AuthController {
     public ResponseEntity<String> resendVerificationCode(@PathVariable String email) {
         authService.resendVerificationToken(email);
         return new ResponseEntity<>("Activation email with code was sent", HttpStatus.OK);
+    }
+
+    @PostMapping
+    public void authenticate(@RequestBody LoginRequest loginRequest) {
+
+    }
+
+    @GetMapping("/check-username/{username}")
+    public Map<String, Boolean>checkUsernameAvailability(@PathVariable String username) {
+        return singletonMap("available", authService.isUsernameAvailable(username);
+    }
+
+    @GetMapping("/check-email/{email}")
+    public Map<String, Boolean> checkEmailAvailability(@PathVariable String email) {
+        return singletonMap("available", authService.isEmailAvailable(email));
     }
 }

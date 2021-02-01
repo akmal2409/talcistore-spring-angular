@@ -11,12 +11,13 @@ import tech.talci.talcistorespring.model.User;
 import tech.talci.talcistorespring.repositories.UserRepository;
 
 import java.util.Collection;
-import java.util.Collections;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
+    public static final String ROLE_PREFIX = "ROLE_";
     private final UserRepository userRepository;
 
     @Override
@@ -26,11 +27,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         return new org.springframework.security.core.userdetails.User(
                 fetchedUser.getUsername(), fetchedUser.getPassword(), fetchedUser.isEnabled(),
-                true, true, true, getAuthority("USER")
+                true, true, true, getAuthority(fetchedUser)
         );
     }
 
-    private Collection<? extends GrantedAuthority> getAuthority(String role) {
-        return Collections.singletonList(new SimpleGrantedAuthority(role));
+    private Collection<? extends GrantedAuthority> getAuthority(User user) {
+        return user.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(ROLE_PREFIX + role.getName()))
+                .collect(Collectors.toList());
     }
 }
