@@ -11,14 +11,14 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
-    @Mapping(target = "numberOfProducts", ignore = true)
+    @Mapping(target = "products", ignore = true)
     @Mapping(target = "id", ignore = true)
     Category mapToCategory(CategoryDto categoryDto);
 
-    @Mapping(target = "numberOfProducts", expression = "java(getNumberOfProducts(category.getProducts()))")
+    @Mapping(target = "numberOfProducts", expression = "java(mapProducts(category.getProducts()))")
     CategoryDto mapToCategoryDto(Category category);
 
-    default Integer getNumberOfProducts(List<Product> products) {
-        return products.size();
+    default Integer mapProducts(List<Product> numberOfProducts) {
+        return numberOfProducts.size();
     }
 }
