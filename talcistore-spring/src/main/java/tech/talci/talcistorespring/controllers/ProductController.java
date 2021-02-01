@@ -1,12 +1,11 @@
 package tech.talci.talcistorespring.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.talci.talcistorespring.dto.ProductDto;
 import tech.talci.talcistorespring.services.ProductService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(ProductController.BASE_URL)
@@ -18,5 +17,15 @@ public class ProductController {
     @PostMapping
     public void createProduct(@RequestBody ProductDto productDto) {
         productService.save(productDto);
+    }
+
+    @GetMapping
+    public List<ProductDto> getAll() {
+        return productService.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public ProductDto getById(@PathVariable Long id) {
+        return productService.getProductById(id);
     }
 }
