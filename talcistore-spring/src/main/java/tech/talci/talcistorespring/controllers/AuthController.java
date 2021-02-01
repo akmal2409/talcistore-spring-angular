@@ -8,7 +8,6 @@ import tech.talci.talcistorespring.dto.LoginRequest;
 import tech.talci.talcistorespring.dto.RegisterRequest;
 import tech.talci.talcistorespring.services.AuthService;
 
-import java.util.Collections;
 import java.util.Map;
 
 import static java.util.Collections.singletonMap;
@@ -39,14 +38,14 @@ public class AuthController {
         return new ResponseEntity<>("Activation email with code was sent", HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/login")
     public void authenticate(@RequestBody LoginRequest loginRequest) {
-
+        authService.authenticate(loginRequest);
     }
 
     @GetMapping("/check-username/{username}")
     public Map<String, Boolean>checkUsernameAvailability(@PathVariable String username) {
-        return singletonMap("available", authService.isUsernameAvailable(username);
+        return singletonMap("available", authService.isUsernameAvailable(username));
     }
 
     @GetMapping("/check-email/{email}")

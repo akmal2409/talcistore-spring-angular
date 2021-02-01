@@ -2,10 +2,15 @@ package tech.talci.talcistorespring.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.talci.talcistorespring.controllers.AuthController;
+import tech.talci.talcistorespring.dto.LoginRequest;
 import tech.talci.talcistorespring.dto.RegisterRequest;
 import tech.talci.talcistorespring.exceptions.AccountVerificationFailedException;
 import tech.talci.talcistorespring.exceptions.AuthenticationFailedException;
@@ -29,6 +34,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final VerificationTokenRepository tokenRepository;
     private final RoleRepository roleRepository;
+    private final AuthenticationManager authenticationManager;
     private final CustomerDetailsRepository customerDetailsRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailService mailService;
@@ -139,5 +145,15 @@ public class AuthService {
         String token = generateVerificationToken(user);
 
         sendActivationEmail(user, token);
+    }
+
+    public void authenticate(LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(
+                        loginRequest.getUsername(),
+                        loginRequest.getPassword()));
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
     }
 }
