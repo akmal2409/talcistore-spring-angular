@@ -8,11 +8,14 @@ import tech.talci.talcistorespring.dto.AuthenticationResponse;
 import tech.talci.talcistorespring.dto.LoginRequest;
 import tech.talci.talcistorespring.dto.RefreshTokenRequest;
 import tech.talci.talcistorespring.dto.RegisterRequest;
+import tech.talci.talcistorespring.model.Role;
 import tech.talci.talcistorespring.services.AuthService;
 import tech.talci.talcistorespring.services.RefreshTokenService;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Collections.singletonMap;
 
@@ -61,6 +64,11 @@ public class AuthController {
     @PostMapping("/refresh/token")
     public AuthenticationResponse refreshToken(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
         return authService.refreshToken(refreshTokenRequest);
+    }
+
+    @GetMapping("/roles")
+    public Set<Role> getRoles() {
+        return authService.getAllRoles();
     }
 
     @PostMapping("/logout")

@@ -24,7 +24,9 @@ import tech.talci.talcistorespring.repositories.*;
 import tech.talci.talcistorespring.security.JwtProvider;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -201,5 +203,10 @@ public class AuthService {
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTime()))
                 .token(jwtToken)
                 .build();
+    }
+
+    public Set<Role> getAllRoles() {
+        return getCurrentUser()
+                .getRoles();
     }
 }

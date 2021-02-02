@@ -17,6 +17,7 @@ public interface ProductMapper {
     @Mapping(target = "addedOn", ignore = true)
     @Mapping(target = "lastUpdated", ignore = true)
     @Mapping(target = "seller", source = "seller")
+    @Mapping(target = "description", source = "productDto.description")
     Product mapToProduct(ProductDto productDto, Category category, User seller);
 
     @Mapping(target = "categoryId", source = "category.id")
