@@ -1,19 +1,16 @@
 package tech.talci.talcistorespring.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
+import javax.validation.constraints.NotEmpty;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class AuthenticationResponse {
-    private String token;
+public class RefreshTokenRequest {
+    @NotEmpty(message = "Refresh token is required")
     private String refreshToken;
-    private Instant expiresAt;
     private String username;
 }

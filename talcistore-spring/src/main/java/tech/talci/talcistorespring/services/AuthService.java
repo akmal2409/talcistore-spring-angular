@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.talci.talcistorespring.controllers.AuthController;
 import tech.talci.talcistorespring.dto.AuthenticationResponse;
 import tech.talci.talcistorespring.dto.LoginRequest;
+import tech.talci.talcistorespring.dto.RefreshTokenRequest;
 import tech.talci.talcistorespring.dto.RegisterRequest;
 import tech.talci.talcistorespring.exceptions.AccountVerificationFailedException;
 import tech.talci.talcistorespring.exceptions.AuthenticationFailedException;
@@ -21,6 +22,7 @@ import tech.talci.talcistorespring.model.*;
 import tech.talci.talcistorespring.repositories.*;
 import tech.talci.talcistorespring.security.JwtProvider;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -163,7 +165,12 @@ public class AuthService {
 
         String jwt = jwtProvider.generateToken(authentication);
 
-        return new AuthenticationResponse(jwt, authentication.getName());
+        return AuthenticationResponse.builder()
+                .refreshToken("")
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTime()))
+                .username(loginRequest.getUsername())
+                .token(jwt)
+                .build();
     }
 
     public User getCurrentUser() {
@@ -171,5 +178,8 @@ public class AuthService {
 
         return userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("User was not found"));
+    }
+
+    public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
     }
 }

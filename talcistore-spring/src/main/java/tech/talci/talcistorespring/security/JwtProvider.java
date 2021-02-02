@@ -3,6 +3,7 @@ package tech.talci.talcistorespring.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.*;
 import java.security.cert.CertificateException;
+import java.time.Instant;
+import java.util.Date;
 
 import static io.jsonwebtoken.Jwts.parser;
 
@@ -21,6 +24,9 @@ import static io.jsonwebtoken.Jwts.parser;
 public class JwtProvider {
 
     private KeyStore keyStore;
+
+    @Value("${jwt.expiration.time}")
+    private Long jwtExpirationTime;
 
     @PostConstruct
     void init() {
@@ -39,6 +45,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .signWith(getPrivateKey())
                 .setSubject(principal.getUsername())
+                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationTime)))
                 .compact();
     }
 
@@ -53,6 +60,10 @@ public class JwtProvider {
                 .parseClaimsJws(jwt)
                 .getBody();
         return claim.getSubject();
+    }
+
+    public Long getJwtExpirationTime() {
+        return this.jwtExpirationTime;
     }
 
     private Key getPrivateKey() {

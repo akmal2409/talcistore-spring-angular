@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.talci.talcistorespring.dto.AuthenticationResponse;
 import tech.talci.talcistorespring.dto.LoginRequest;
+import tech.talci.talcistorespring.dto.RefreshTokenRequest;
 import tech.talci.talcistorespring.dto.RegisterRequest;
 import tech.talci.talcistorespring.services.AuthService;
 
@@ -52,5 +53,10 @@ public class AuthController {
     @GetMapping("/check-email/{email}")
     public Map<String, Boolean> checkEmailAvailability(@PathVariable String email) {
         return singletonMap("available", authService.isEmailAvailable(email));
+    }
+
+    @PostMapping("/refresh/token/")
+    public AuthenticationResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+        return authService.refreshToken(refreshTokenRequest);
     }
 }
