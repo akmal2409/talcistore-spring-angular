@@ -6,6 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,7 @@ public class AuthService {
     private final UserRepository userRepository;
     private final VerificationTokenRepository tokenRepository;
     private final RoleRepository roleRepository;
+    private final RefreshTokenService refreshTokenService;
     private final AuthenticationManager authenticationManager;
     private final CustomerDetailsRepository customerDetailsRepository;
     private final ShoppingCartRepository shoppingCartRepository;
@@ -166,13 +168,14 @@ public class AuthService {
         String jwt = jwtProvider.generateToken(authentication);
 
         return AuthenticationResponse.builder()
-                .refreshToken("")
+                .refreshToken(refreshTokenService.generateRefreshToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTime()))
                 .username(loginRequest.getUsername())
                 .token(jwt)
                 .build();
     }
 
+    @Transactional(readOnly = true)
     public User getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -180,6 +183,23 @@ public class AuthService {
                 .orElseThrow(() -> new ResourceNotFoundException("User was not found"));
     }
 
+
     public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
+        User fetchedUser = userRepository.findUserByUsername(refreshTokenRequest.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User was not found with username "
+                        + refreshTokenRequest.getUsername()));
+
+        refreshTokenService
+                .validateRefreshToken(refreshTokenRequest.getRefreshToken());
+
+        String jwtToken = jwtProvider
+                .generateTokenWithUsername(fetchedUser.getUsername());
+
+        return AuthenticationResponse.builder()
+                .refreshToken(refreshTokenRequest.getRefreshToken())
+                .username(fetchedUser.getUsername())
+                .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationTime()))
+                .token(jwtToken)
+                .build();
     }
 }

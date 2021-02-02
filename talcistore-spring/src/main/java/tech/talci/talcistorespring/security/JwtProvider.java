@@ -49,6 +49,14 @@ public class JwtProvider {
                 .compact();
     }
 
+    public String generateTokenWithUsername(String username) {
+        return Jwts.builder()
+                .signWith(getPrivateKey())
+                .setExpiration(Date.from(Instant.now().plusMillis(jwtExpirationTime)))
+                .setSubject(username)
+                .compact();
+    }
+
     public boolean validateToken(String jwt) {
         parser().setSigningKey(getPublicKey())
                 .parseClaimsJws(jwt);

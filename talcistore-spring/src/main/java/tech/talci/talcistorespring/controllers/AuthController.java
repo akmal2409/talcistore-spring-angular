@@ -9,7 +9,9 @@ import tech.talci.talcistorespring.dto.LoginRequest;
 import tech.talci.talcistorespring.dto.RefreshTokenRequest;
 import tech.talci.talcistorespring.dto.RegisterRequest;
 import tech.talci.talcistorespring.services.AuthService;
+import tech.talci.talcistorespring.services.RefreshTokenService;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 import static java.util.Collections.singletonMap;
@@ -21,9 +23,10 @@ public class AuthController {
 
     public static final String BASE_URL = "/api/auth";
     private final AuthService authService;
+    private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<String> signUp(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<String> signUp(@RequestBody @Valid RegisterRequest registerRequest) {
         authService.singUp(registerRequest);
         return new ResponseEntity<>("You were successfully registered", HttpStatus.CREATED);
     }
@@ -56,7 +59,13 @@ public class AuthController {
     }
 
     @PostMapping("/refresh/token/")
-    public AuthenticationResponse refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
+    public AuthenticationResponse refreshToken(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
         return authService.refreshToken(refreshTokenRequest);
+    }
+
+    @PostMapping("/logout")
+    public void logout(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
+        refreshTokenService
+                .deleteByToken(refreshTokenRequest.getRefreshToken());
     }
 }
