@@ -36,6 +36,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .mvcMatchers(AuthController.BASE_URL + "/**")
                 .permitAll()
+                .mvcMatchers("/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/configuration/security",
+                        "/swagger-ui.html",
+                        "/webjars/**")
+                .permitAll()
                 .mvcMatchers(HttpMethod.GET, ProductController.BASE_URL + "/**")
                 .permitAll()
                 .mvcMatchers(HttpMethod.GET, CategoryController.BASE_URL + "/**")
