@@ -58,7 +58,7 @@ public class AuthController {
         return singletonMap("available", authService.isEmailAvailable(email));
     }
 
-    @PostMapping("/refresh/token/")
+    @PostMapping("/refresh/token")
     public AuthenticationResponse refreshToken(@RequestBody @Valid RefreshTokenRequest refreshTokenRequest) {
         return authService.refreshToken(refreshTokenRequest);
     }
