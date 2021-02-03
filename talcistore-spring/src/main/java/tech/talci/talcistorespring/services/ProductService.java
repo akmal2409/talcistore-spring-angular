@@ -1,6 +1,9 @@
 package tech.talci.talcistorespring.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,11 +44,24 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductDto> getAll() {
-        return productRepository.findAll()
-                .stream()
-                .map(productMapper::mapToProductDto)
-                .collect(Collectors.toList());
+    public Page<ProductDto> getAll(Integer page, Integer size, boolean sortByPrice, boolean desc) {
+        if (sortByPrice) {
+            return getAllSortedByPrice(page, size, desc);
+        }
+
+        return productRepository.findAll(PageRequest.of(page, size))
+                .map(productMapper::mapToProductDto);
+    }
+
+    private Page<ProductDto> getAllSortedByPrice(Integer page, Integer size, boolean desc) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("pricePerUnit"));
+
+        if (desc) {
+            pageRequest = PageRequest.of(page, size, Sort.by("pricePerUnit").descending());
+        }
+
+        return productRepository.findAll(pageRequest)
+                .map(productMapper::mapToProductDto);
     }
 
     @Transactional(readOnly = true)
@@ -55,4 +71,6 @@ public class ProductService {
 
         return productMapper.mapToProductDto(fetchedProduct);
     }
+
+
 }

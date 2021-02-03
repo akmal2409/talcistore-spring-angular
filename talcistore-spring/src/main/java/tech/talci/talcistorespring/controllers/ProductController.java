@@ -1,6 +1,7 @@
 package tech.talci.talcistorespring.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import tech.talci.talcistorespring.dto.ProductDto;
 import tech.talci.talcistorespring.services.ProductService;
@@ -23,8 +24,13 @@ public class ProductController {
     }
 
     @GetMapping
-    public List<ProductDto> getAll() {
-        return productService.getAll();
+    public Page<ProductDto> getAll(
+            @RequestParam(defaultValue = "0") Integer page,
+            @RequestParam(defaultValue = "15") Integer size,
+            @RequestParam(required = false) boolean sortByPrice,
+            @RequestParam(required = false) boolean desc
+    ) {
+        return productService.getAll(page, size, sortByPrice, desc);
     }
 
     @GetMapping("/{id}")
