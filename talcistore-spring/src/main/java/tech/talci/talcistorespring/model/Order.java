@@ -41,6 +41,8 @@ public class Order {
 
     private BigDecimal totalPrice;
 
+    private boolean isPaid;
+
     @PrePersist
     public void setupOrder() {
         this.placedOn = LocalDate.now();

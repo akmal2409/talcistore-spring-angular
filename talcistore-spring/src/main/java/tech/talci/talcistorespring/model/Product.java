@@ -15,10 +15,8 @@ import javax.validation.constraints.NotEmpty;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -45,8 +43,13 @@ public class Product {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than {value}")
     private BigDecimal pricePerUnit;
 
-    @ManyToOne(fetch = LAZY)
-    private Category category;
+    @ManyToMany(fetch = LAZY)
+    @JoinTable(
+            name = "product_categories",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> category;
 
     @NotEmpty(message = "Country of origin is required")
     private String countryOfOrigin;
