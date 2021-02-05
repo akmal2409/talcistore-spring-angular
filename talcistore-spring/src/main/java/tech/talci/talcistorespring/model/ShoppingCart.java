@@ -21,7 +21,7 @@ public class ShoppingCart {
     private Long id;
 
     @OneToMany(fetch = LAZY)
-    private List<Product> products;
+    private List<CartItem> products;
 
     @OneToOne(fetch = LAZY)
     private User user;
