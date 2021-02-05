@@ -78,10 +78,21 @@ public class ProductService {
         return PaginationUtil.convertToPageResponse(fetchedPage);
     }
 
+    @Transactional(readOnly = true)
     public PageResponse<ProductDto> findAllByCategoryId(Long categoryId, Integer page, Integer size,
                                                         boolean sortByPrice, boolean desc) {
-        PageRequest pageRequest = PageRequest.of(page, size);
 
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new ResourceNotFoundException("Category was not found"));
+
+        PageRequest pageRequest = PaginationUtil
+                .productPageRequest(page, size, sortByPrice, desc);
+
+        Page<ProductDto> fetchedPage = productRepository
+                .findByCategory(category, pageRequest)
+                .map(productMapper::mapToProductDto);
+
+        return PaginationUtil.convertToPageResponse(fetchedPage);
     }
 
 
