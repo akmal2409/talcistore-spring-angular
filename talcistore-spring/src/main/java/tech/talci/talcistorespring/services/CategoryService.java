@@ -51,4 +51,10 @@ public class CategoryService {
                 .map(categoryMapper::mapToCategoryDto)
                 .collect(Collectors.toList());
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void deleteById(Long id) {
+        categoryRepository.deleteById(id);
+    }
 }

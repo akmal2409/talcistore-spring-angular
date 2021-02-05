@@ -35,4 +35,9 @@ public class CategoryController {
     public Map<String, Boolean> checkAvailabilityOfCategoryName(@PathVariable String name) {
         return singletonMap("available", categoryService.isCategoryNameAvailable(name));
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable Long id) {
+        categoryService.deleteById(id);
+    }
 }
