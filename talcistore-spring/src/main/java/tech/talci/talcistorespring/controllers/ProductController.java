@@ -1,15 +1,11 @@
 package tech.talci.talcistorespring.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
 import tech.talci.talcistorespring.dto.PageResponse;
 import tech.talci.talcistorespring.dto.ProductDto;
-import tech.talci.talcistorespring.model.Product;
 import tech.talci.talcistorespring.services.ProductService;
 
-import java.util.List;
 
 @RestController
 @RequestMapping(ProductController.BASE_URL)
@@ -65,5 +61,10 @@ public class ProductController {
                                                     @RequestParam(required = false) boolean sortByPrice,
                                                     @RequestParam(required = false) boolean desc) {
         return productService.findAllBySellerId(sellerId, page, size, sortByPrice, desc);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        productService.deleteById(id);
     }
 }

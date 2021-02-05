@@ -123,4 +123,9 @@ public class ProductService {
 
         return PaginationUtil.convertToPageResponse(fetchedPage);
     }
+
+    @Transactional
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
+    }
 }
