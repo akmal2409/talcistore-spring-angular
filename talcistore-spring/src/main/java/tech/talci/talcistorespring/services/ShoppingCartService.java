@@ -14,6 +14,7 @@ import tech.talci.talcistorespring.repositories.ShoppingCartRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,14 +24,15 @@ public class ShoppingCartService {
     private final AuthService authService;
     private final ProductMapper productMapper;
 
-    @Transactional(readOnly = true)
     public List<ProductDto> getAllProducts() {
         ShoppingCart fetchedCart = getCartForCurrentUser();
 
-
+        return fetchedCart.getProducts()
+                .stream()
+                .map(productMapper::mapToProductDto)
+                .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public ShoppingCartDto getCartLastFive() {
         ShoppingCart fetchedCart = getCartForCurrentUser();
 
@@ -59,7 +61,7 @@ public class ShoppingCartService {
     }
 
     @Transactional(readOnly = true)
-    private ShoppingCart getCartForCurrentUser() {
+    public ShoppingCart getCartForCurrentUser() {
         User user = authService.getCurrentUser();
         ShoppingCart fetchedCart = cartRepository.findShoppingCartByUser(user)
                 .orElseThrow(() -> new TalciStoreException("Shopping cart was not found"));

@@ -1,9 +1,7 @@
 package tech.talci.talcistorespring.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tech.talci.talcistorespring.dto.ProductDto;
 import tech.talci.talcistorespring.dto.ShoppingCartDto;
 import tech.talci.talcistorespring.services.ShoppingCartService;
@@ -21,6 +19,11 @@ public class ShoppingCartController {
     @GetMapping
     public List<ProductDto> getAllFromCart() {
         return cartService.getAllProducts();
+    }
+
+    @PostMapping
+    public void addToCart() {
+
     }
 
     @GetMapping("/last-five")
