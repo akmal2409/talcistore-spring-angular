@@ -125,6 +125,7 @@ public class ProductService {
     }
 
     @Transactional
+    @PreAuthorize("hasRole('SELLER')")
     public void deleteById(Long id) {
         productRepository.deleteById(id);
     }
