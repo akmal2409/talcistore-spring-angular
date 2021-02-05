@@ -3,7 +3,6 @@ package tech.talci.talcistorespring.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,10 +12,15 @@ import tech.talci.talcistorespring.dto.mappers.ProductMapper;
 import tech.talci.talcistorespring.exceptions.ResourceNotFoundException;
 import tech.talci.talcistorespring.model.Category;
 import tech.talci.talcistorespring.model.Product;
+import tech.talci.talcistorespring.model.Role;
 import tech.talci.talcistorespring.model.User;
 import tech.talci.talcistorespring.repositories.CategoryRepository;
 import tech.talci.talcistorespring.repositories.ProductRepository;
+import tech.talci.talcistorespring.repositories.UserRepository;
 import tech.talci.talcistorespring.util.PaginationUtil;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +29,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
     private final ProductMapper productMapper;
     private final AuthService authService;
 
@@ -95,5 +100,27 @@ public class ProductService {
         return PaginationUtil.convertToPageResponse(fetchedPage);
     }
 
+    @Transactional(readOnly = true)
+    public PageResponse<ProductDto> findAllBySellerId(Long sellerId, Integer page, Integer size,
+                                                      boolean sortByPrice, boolean desc) {
+        User seller = userRepository.findById(sellerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Seller was not found"));
 
+        Set<Role> roles = seller.getRoles()
+                .stream()
+                .filter(role -> role.getName().equals("SELLER"))
+                .collect(Collectors.toSet());
+
+        if (roles.isEmpty()) {
+            throw new ResourceNotFoundException("Seller was not found!");
+        }
+
+        PageRequest pageRequest = PaginationUtil
+                .productPageRequest(page, size, sortByPrice, desc);
+
+        Page<ProductDto> fetchedPage = productRepository.findBySeller(seller, pageRequest)
+                .map(productMapper::mapToProductDto);
+
+        return PaginationUtil.convertToPageResponse(fetchedPage);
+    }
 }

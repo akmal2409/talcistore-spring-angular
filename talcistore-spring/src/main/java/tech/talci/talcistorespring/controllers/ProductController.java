@@ -57,4 +57,13 @@ public class ProductController {
                                                       @RequestParam(required = false) boolean desc) {
         return productService.findAllByCategoryId(categoryId, page, size, sortByPrice, desc);
     }
+
+    @GetMapping("/by-seller/{sellerId}")
+    public PageResponse<ProductDto> findAllBySeller(@PathVariable Long sellerId,
+                                                    @RequestParam(defaultValue = "0") Integer page,
+                                                    @RequestParam(defaultValue = "15") Integer size,
+                                                    @RequestParam(required = false) boolean sortByPrice,
+                                                    @RequestParam(required = false) boolean desc) {
+        return productService.findAllBySellerId(sellerId, page, size, sortByPrice, desc);
+    }
 }
