@@ -18,7 +18,6 @@ public class ProductController {
     public static final String BASE_URL = "/api/products";
     private final ProductService productService;
 
-    //TODO: Pagination of products
     //TODO: Add UserController for the management purposes
 
     @PostMapping
@@ -48,5 +47,14 @@ public class ProductController {
     @GetMapping("/{id}")
     public ProductDto getById(@PathVariable Long id) {
         return productService.getProductById(id);
+    }
+
+    @GetMapping("/by-category/{categoryId}")
+    public PageResponse<ProductDto> findAllByCategory(@PathVariable Long categoryId,
+                                                      @RequestParam(defaultValue = "0") Integer page,
+                                                      @RequestParam(defaultValue = "15") Integer size,
+                                                      @RequestParam(required = false) boolean sortByPrice,
+                                                      @RequestParam(required = false) boolean desc) {
+        return productService.findAllByCategoryId(categoryId, page, size, sortByPrice, desc);
     }
 }

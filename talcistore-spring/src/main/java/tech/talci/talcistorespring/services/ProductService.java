@@ -16,10 +16,11 @@ import tech.talci.talcistorespring.model.Product;
 import tech.talci.talcistorespring.model.User;
 import tech.talci.talcistorespring.repositories.CategoryRepository;
 import tech.talci.talcistorespring.repositories.ProductRepository;
-import tech.talci.talcistorespring.util.PaginationConverter;
+import tech.talci.talcistorespring.util.PaginationUtil;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -44,29 +45,15 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public PageResponse<ProductDto> getAll(Integer page, Integer size, boolean sortByPrice, boolean desc) {
-        if (sortByPrice) {
-            return getAllSortedByPrice(page, size, desc);
-        }
+        PageRequest pageRequest = PaginationUtil
+                .productPageRequest(page, size, sortByPrice, desc);
 
         Page<ProductDto> fetchedPage = productRepository
-                .findAll(PageRequest.of(page, size))
+                .findAll(pageRequest)
                 .map(productMapper::mapToProductDto);
 
 
-        return PaginationConverter.convertToPageResponse(fetchedPage);
-    }
-
-    private PageResponse<ProductDto> getAllSortedByPrice(Integer page, Integer size, boolean desc) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("pricePerUnit"));
-
-        if (desc) {
-            pageRequest = PageRequest.of(page, size, Sort.by("pricePerUnit").descending());
-        }
-
-        Page<ProductDto> fetchedPage = productRepository.findAll(pageRequest)
-                .map(productMapper::mapToProductDto);
-
-        return PaginationConverter.convertToPageResponse(fetchedPage);
+        return PaginationUtil.convertToPageResponse(fetchedPage);
     }
 
     @Transactional(readOnly = true)
@@ -81,10 +68,21 @@ public class ProductService {
     @Transactional(readOnly = true)
     public PageResponse<ProductDto> searchByKeyword(String nameOrDescription, Integer page, Integer size,
                                                     boolean sortByPrice, boolean desc) {
+        PageRequest pageRequest = PaginationUtil
+                .productPageRequest(page, size, sortByPrice, desc);
+
         Page<ProductDto> fetchedPage = productRepository
-                .findByProductNameOrDescriptionContaining(nameOrDescription, PageRequest.of(page, size))
+                .findByProductNameOrDescriptionContaining(nameOrDescription, pageRequest)
                 .map(productMapper::mapToProductDto);
 
-        return PaginationConverter.convertToPageResponse(fetchedPage);
+        return PaginationUtil.convertToPageResponse(fetchedPage);
     }
+
+    public PageResponse<ProductDto> findAllByCategoryId(Long categoryId, Integer page, Integer size,
+                                                        boolean sortByPrice, boolean desc) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+
+    }
+
+
 }
