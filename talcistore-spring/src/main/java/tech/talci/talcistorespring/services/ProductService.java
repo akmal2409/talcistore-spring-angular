@@ -3,11 +3,11 @@ package tech.talci.talcistorespring.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tech.talci.talcistorespring.dto.PageResponse;
 import tech.talci.talcistorespring.dto.ProductDto;
 import tech.talci.talcistorespring.dto.mappers.ProductMapper;
 import tech.talci.talcistorespring.exceptions.ResourceNotFoundException;
@@ -16,8 +16,7 @@ import tech.talci.talcistorespring.model.Product;
 import tech.talci.talcistorespring.model.User;
 import tech.talci.talcistorespring.repositories.CategoryRepository;
 import tech.talci.talcistorespring.repositories.ProductRepository;
-
-import java.util.List;
+import tech.talci.talcistorespring.util.PaginationConverter;
 
 @Service
 @RequiredArgsConstructor
@@ -44,24 +43,30 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Slice<ProductDto> getAll(Integer page, Integer size, boolean sortByPrice, boolean desc) {
+    public PageResponse<ProductDto> getAll(Integer page, Integer size, boolean sortByPrice, boolean desc) {
         if (sortByPrice) {
             return getAllSortedByPrice(page, size, desc);
         }
 
-        return productRepository.findAll(PageRequest.of(page, size))
+        Page<ProductDto> fetchedPage = productRepository
+                .findAll(PageRequest.of(page, size))
                 .map(productMapper::mapToProductDto);
+
+
+        return PaginationConverter.convertToPageResponse(fetchedPage);
     }
 
-    private Slice<ProductDto> getAllSortedByPrice(Integer page, Integer size, boolean desc) {
+    private PageResponse<ProductDto> getAllSortedByPrice(Integer page, Integer size, boolean desc) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("pricePerUnit"));
 
         if (desc) {
             pageRequest = PageRequest.of(page, size, Sort.by("pricePerUnit").descending());
         }
 
-        return productRepository.findAll(pageRequest)
+        Page<ProductDto> fetchedPage = productRepository.findAll(pageRequest)
                 .map(productMapper::mapToProductDto);
+
+        return PaginationConverter.convertToPageResponse(fetchedPage);
     }
 
     @Transactional(readOnly = true)
@@ -74,8 +79,12 @@ public class ProductService {
 
 
     @Transactional(readOnly = true)
-    public Slice<ProductDto> searchByKeyword(String nameOrDescription) {
-        return productRepository.findByProductNameOrDescriptionContaining(nameOrDescription, PageRequest.of(0, 10))
+    public PageResponse<ProductDto> searchByKeyword(String nameOrDescription, Integer page, Integer size,
+                                                    boolean sortByPrice, boolean desc) {
+        Page<ProductDto> fetchedPage = productRepository
+                .findByProductNameOrDescriptionContaining(nameOrDescription, PageRequest.of(page, size))
                 .map(productMapper::mapToProductDto);
+
+        return PaginationConverter.convertToPageResponse(fetchedPage);
     }
 }

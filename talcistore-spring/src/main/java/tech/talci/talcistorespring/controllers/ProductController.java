@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
+import tech.talci.talcistorespring.dto.PageResponse;
 import tech.talci.talcistorespring.dto.ProductDto;
 import tech.talci.talcistorespring.model.Product;
 import tech.talci.talcistorespring.services.ProductService;
@@ -26,7 +27,7 @@ public class ProductController {
     }
 
     @GetMapping
-    public Slice<ProductDto> getAll(
+    public PageResponse<ProductDto> getAll(
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "15") Integer size,
             @RequestParam(required = false) boolean sortByPrice,
@@ -36,8 +37,12 @@ public class ProductController {
     }
 
     @GetMapping("/search-product/{nameOrDescription}")
-    public Slice<ProductDto> searchFor(@PathVariable String nameOrDescription) {
-        return productService.searchByKeyword(nameOrDescription);
+    public PageResponse<ProductDto> searchFor(@PathVariable String nameOrDescription,
+                                              @RequestParam(defaultValue = "0") Integer page,
+                                              @RequestParam(defaultValue = "15") Integer size,
+                                              @RequestParam(required = false) boolean sortByPrice,
+                                              @RequestParam(required = false) boolean desc) {
+        return productService.searchByKeyword(nameOrDescription, page, size, sortByPrice, desc);
     }
 
     @GetMapping("/{id}")
