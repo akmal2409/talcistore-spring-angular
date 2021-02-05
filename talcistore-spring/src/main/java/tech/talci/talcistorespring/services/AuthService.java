@@ -48,10 +48,7 @@ public class AuthService {
 
     @Transactional
     public void singUp(RegisterRequest registerRequest) {
-        if (!isEmailAvailable(registerRequest.getEmail())
-                || !isUsernameAvailable(registerRequest.getUsername())) {
-            throw new AuthenticationFailedException("Username or email is already taken");
-        }
+        checkUsernameEmail(registerRequest);
 
         User createdUser = User.builder()
                 .email(registerRequest.getEmail())
@@ -66,6 +63,36 @@ public class AuthService {
         String token = generateVerificationToken(savedUser);
 
         sendActivationEmail(savedUser, token);
+    }
+
+    @Transactional
+    public void createSeller(RegisterRequest registerRequest) {
+        checkUsernameEmail(registerRequest);
+
+        Role sellerRole = roleRepository.findRoleByName("SELLER")
+                .orElseThrow(() -> new TalciStoreException("Roles must be initialized by the administrator"));
+
+        User createdUser = User.builder()
+                .email(registerRequest.getEmail())
+                .username(registerRequest.getUsername())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .isEnabled(false)
+                .roles(Set.of(sellerRole))
+                .isProfileComplete(false)
+                .build();
+
+        User savedUser = userRepository.save(createdUser);
+
+        String token = generateVerificationToken(savedUser);
+
+        sendActivationEmail(savedUser, token);
+    }
+
+    private void checkUsernameEmail(RegisterRequest registerRequest) {
+        if (!isEmailAvailable(registerRequest.getEmail())
+                || !isUsernameAvailable(registerRequest.getUsername())) {
+            throw new AuthenticationFailedException("Username or email is already taken");
+        }
     }
 
     public void verifyAccount(String token) {

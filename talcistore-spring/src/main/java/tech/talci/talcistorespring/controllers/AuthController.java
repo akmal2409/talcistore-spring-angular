@@ -34,6 +34,13 @@ public class AuthController {
         return new ResponseEntity<>("You were successfully registered", HttpStatus.CREATED);
     }
 
+    @PostMapping("/seller-sign-up")
+    public ResponseEntity<String> createSeller(@RequestBody @Valid RegisterRequest registerRequest) {
+        authService.createSeller(registerRequest);
+
+        return new ResponseEntity<>("You were successfully registered as seller", HttpStatus.CREATED);
+    }
+
     @GetMapping("/verify-account/{token}")
     public ResponseEntity<String> verifyAccount(@PathVariable String token) {
         authService.verifyAccount(token);
