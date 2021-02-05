@@ -10,6 +10,7 @@ import tech.talci.talcistorespring.dto.PageResponse;
 import tech.talci.talcistorespring.dto.ProductDto;
 import tech.talci.talcistorespring.dto.mappers.ProductMapper;
 import tech.talci.talcistorespring.exceptions.ResourceNotFoundException;
+import tech.talci.talcistorespring.exceptions.UnauthorizedActionException;
 import tech.talci.talcistorespring.model.Category;
 import tech.talci.talcistorespring.model.Product;
 import tech.talci.talcistorespring.model.Role;
@@ -19,6 +20,7 @@ import tech.talci.talcistorespring.repositories.ProductRepository;
 import tech.talci.talcistorespring.repositories.UserRepository;
 import tech.talci.talcistorespring.util.PaginationUtil;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -127,6 +129,25 @@ public class ProductService {
     @Transactional
     @PreAuthorize("hasRole('SELLER')")
     public void deleteById(Long id) {
-        productRepository.deleteById(id);
+        Product fetchedProduct = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+
+        User seller = authService.getCurrentUser();
+
+        if (fetchedProduct.getSeller().getUserId() != seller.getUserId()
+                && !Role.isAdmin(seller)) {
+            throw new UnauthorizedActionException("It must be your product or you must be an administrator");
+        }
+
+        Optional<Category> fetchedCategory = categoryRepository
+                .findById(fetchedProduct.getCategory().getId());
+
+        if (fetchedCategory.isPresent()) {
+            Category category = fetchedCategory.get();
+            category.getProducts().remove(fetchedProduct);
+            categoryRepository.save(category);
+        }
+
+        productRepository.delete(fetchedProduct);
     }
 }

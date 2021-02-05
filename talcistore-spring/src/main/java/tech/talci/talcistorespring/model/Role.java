@@ -28,4 +28,14 @@ public class Role {
         role.setDescription(roleDescription);
         return role;
     }
+
+    public static boolean isAdmin(User user) {
+        for (Role role: user.getRoles()) {
+            if (role.getName().equals("ADMIN")) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
