@@ -29,7 +29,7 @@ public class Category {
     @NotEmpty(message = "Category description is required")
     private String description;
 
-    @OneToMany(fetch = LAZY)
+    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "product_id")
     private List<Product> products;
 }

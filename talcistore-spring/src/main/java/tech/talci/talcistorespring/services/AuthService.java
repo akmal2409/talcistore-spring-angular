@@ -2,6 +2,7 @@ package tech.talci.talcistorespring.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +25,6 @@ import tech.talci.talcistorespring.repositories.*;
 import tech.talci.talcistorespring.security.JwtProvider;
 
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -205,6 +205,7 @@ public class AuthService {
                 .build();
     }
 
+    @PreAuthorize("isAuthenticated()")
     public Set<Role> getAllRoles() {
         return getCurrentUser()
                 .getRoles();

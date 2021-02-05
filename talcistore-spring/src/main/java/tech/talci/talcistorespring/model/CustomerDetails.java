@@ -26,7 +26,7 @@ public class CustomerDetails {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = LAZY, mappedBy = "customerDetails")
+    @OneToOne(fetch = LAZY, mappedBy = "customerDetails", cascade = CascadeType.ALL)
     private User user;
     private String firstName;
     private String lastName;

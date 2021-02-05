@@ -43,13 +43,8 @@ public class Product {
     @DecimalMin(value = "0.0", inclusive = false, message = "Price must be greater than {value}")
     private BigDecimal pricePerUnit;
 
-    @ManyToMany(fetch = LAZY)
-    @JoinTable(
-            name = "product_categories",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
-    private List<Category> category;
+    @ManyToOne(fetch = LAZY)
+    private Category category;
 
     @NotEmpty(message = "Country of origin is required")
     private String countryOfOrigin;

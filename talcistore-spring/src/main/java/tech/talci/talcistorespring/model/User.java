@@ -46,7 +46,7 @@ public class User {
 
     private boolean isProfileComplete;
 
-    @OneToOne(fetch = LAZY)
+    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "details_id")
     private CustomerDetails customerDetails;
 

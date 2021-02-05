@@ -3,6 +3,7 @@ package tech.talci.talcistorespring.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,6 @@ import tech.talci.talcistorespring.repositories.CategoryRepository;
 import tech.talci.talcistorespring.repositories.ProductRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +44,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProductDto> getAll(Integer page, Integer size, boolean sortByPrice, boolean desc) {
+    public Slice<ProductDto> getAll(Integer page, Integer size, boolean sortByPrice, boolean desc) {
         if (sortByPrice) {
             return getAllSortedByPrice(page, size, desc);
         }
@@ -53,7 +53,7 @@ public class ProductService {
                 .map(productMapper::mapToProductDto);
     }
 
-    private Page<ProductDto> getAllSortedByPrice(Integer page, Integer size, boolean desc) {
+    private Slice<ProductDto> getAllSortedByPrice(Integer page, Integer size, boolean desc) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by("pricePerUnit"));
 
         if (desc) {
@@ -73,4 +73,9 @@ public class ProductService {
     }
 
 
+    @Transactional(readOnly = true)
+    public Slice<ProductDto> searchByKeyword(String nameOrDescription) {
+        return productRepository.findByProductNameOrDescriptionContaining(nameOrDescription, PageRequest.of(0, 10))
+                .map(productMapper::mapToProductDto);
+    }
 }
