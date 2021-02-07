@@ -1,11 +1,38 @@
 <div class="product-grid">
-  <mat-card>
-    <img
-      mat-card-image
-      src="http://www.aaru.edu.jo/websites/aaru2/wp-content/plugins/learnpress/assets/images/no-image.png?Mobile=1&Source=%2F%5Flayouts%2Fmobile%2Fdispform%2Easpx%3FList%3D78b536db%252De7c7%252D45d9%252Da661%252Ddb2a2aa2fbaf%26View%3D6efc759a%252D0646%252D433c%252Dab6e%252D2f027ffe0799%26RootFolder%3D%252Fwebsites%252Faaru2%252Fwp%252Dcontent%252Fplugins%252Flearnpress%252Fassets%252Fimages%26ID%3D4786%26CurrentPage%3D1"
-    />
+  <mat-card class="product-card" *ngFor="let product of products">
+    <a [routerLink]="['/']">
+      <img
+        mat-card-image
+        src="http://gammalb.com/wp-content/uploads/2020/04/hp2-19.png"
+      />
+    </a>
     <mat-card-header>
-      <mat-card-title>Lenovo PC</mat-card-title>
+      <mat-card-title
+        ><a [routerLink]="['/product', product.id]">{{
+          product.productName
+        }}</a></mat-card-title
+      >
+      <mat-card-subtitle>Laptops and Hardware</mat-card-subtitle>
+      <d-ng-rating [size]="5" [rating]="'2'" [readonly]="true"></d-ng-rating>
+      <div class="price-box">
+        <div class="price">
+          <span>{{ product.pricePerUnit }}</span>
+          <mat-icon>euro_symbol</mat-icon>
+        </div>
+        <div>
+          <p class="shipping text-indigo-600">
+            Free Shipping
+            <fa-icon [icon]="shippingIcon"></fa-icon>
+          </p>
+        </div>
+      </div>
+      <div class="order-section">
+        <p class="mt-2 mb-0">Orders: {{ product.orderCount }}</p>
+        <button mat-button [color]="'accent'">
+          To cart
+          <mat-icon> add_shopping_cart</mat-icon>
+        </button>
+      </div>
     </mat-card-header>
   </mat-card>
 </div>

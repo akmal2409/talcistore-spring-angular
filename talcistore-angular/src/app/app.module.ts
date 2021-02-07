@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -18,6 +18,7 @@ import { VerificationComponent } from './auth/verification/verification.componen
 import { ToastrModule } from 'ngx-toastr';
 import { CapitalizePipe } from './shared/capitalize.pipe';
 import { ProductListComponent } from './main/products/product-list/product-list.component';
+import { NgRatingModule } from 'd-ng-rating';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,8 @@ import { ProductListComponent } from './main/products/product-list/product-list.
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right',
     }),
+    HammerModule,
+    NgRatingModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

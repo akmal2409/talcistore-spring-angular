@@ -12,4 +12,5 @@ export class ProductModel {
   productName: string;
   rating?: number;
   sellerId?: number;
+  imgUrl: string;
 }
