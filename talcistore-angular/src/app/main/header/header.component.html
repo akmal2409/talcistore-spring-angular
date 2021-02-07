@@ -1,0 +1,45 @@
+<nav class="bg-blue-900 flex flex-row">
+  <button md-mat-icon-button class="md-icon-button sidenav-toggle-button">
+    <button
+      (click)="onToggleSidebar()"
+      mat-icon-button
+      color="warn"
+      class="toggler"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
+  </button>
+  <div
+    class="md:container py-4 container max-w-lg mx-auto py-2 flex flex-row justify-around items-center"
+  >
+    <h1 class="logo">talci</h1>
+    <form class="search-bar flex flex-row relative p-0 m-0">
+      <input class="search-box" placeholder="What are you looking for?" />
+      <fa-icon [icon]="searchIcon" class="text-blue-600"></fa-icon>
+    </form>
+
+    <div class="nav-links md:flex md:flex-row items-center hidden">
+      <ng-container *ngIf="!isLoggedIn">
+        <a style="font-size: 1rem" [routerLink]="['/login']" [routerLinkActive]>
+          Login
+        </a>
+        <a
+          style="font-size: 1rem"
+          [routerLink]="['/sign-up']"
+          [routerLinkActive]
+        >
+          Sign Up
+        </a>
+      </ng-container>
+      <ng-container *ngIf="isLoggedIn">
+        <div class="greeting hidden sm:flex flex-col items-center">
+          <p class="font-extralight text-sm">Welcome</p>
+          <p class="font-semibold">Akmal</p>
+        </div>
+        <a><fa-icon [icon]="userIcon"></fa-icon></a>
+      </ng-container>
+      <a><fa-icon [icon]="heartIcon"></fa-icon></a>
+      <a><fa-icon [icon]="shoppingCartIcon"></fa-icon></a>
+    </div>
+  </div>
+</nav>

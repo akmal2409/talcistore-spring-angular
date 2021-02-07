@@ -1,0 +1,75 @@
+<div class="custom-container">
+  <mat-card class="signup-card">
+    <mat-card-header>
+      <mat-card-title>Register your account</mat-card-title>
+    </mat-card-header>
+    <mat-card-content *ngIf="showSpinner">
+      <mat-spinner class="mx-auto" [color]="'accent'"></mat-spinner>
+    </mat-card-content>
+    <mat-card-content *ngIf="!showSpinner">
+      <form [formGroup]="signupForm" (ngSubmit)="onSignup()">
+        <mat-form-field class="field">
+          <mat-label>Username</mat-label>
+          <input matInput placeholder="johnDoe" formControlName="username" />
+          <mat-error
+            *ngIf="
+              signupForm.get('username').invalid &&
+              signupForm.get('username').touched
+            "
+          >
+            Username is required
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="field">
+          <mat-label>Email</mat-label>
+          <input
+            matInput
+            placeholder="johnDoe@email.com"
+            formControlName="email"
+          />
+          <mat-error
+            *ngIf="
+              signupForm.get('email').invalid && signupForm.get('email').touched
+            "
+          >
+            <span *ngIf="signupForm.get('email').errors['required']"
+              >Email is required</span
+            >
+            <span *ngIf="signupForm.get('email').errors['email']"
+              >Email is not valid</span
+            >
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="field">
+          <mat-label>Password</mat-label>
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            matInput
+            formControlName="password"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="showPassword = !showPassword"
+          >
+            <mat-icon>{{
+              showPassword ? "visibility" : "visibility_off"
+            }}</mat-icon>
+          </button>
+          <mat-error
+            *ngIf="
+              signupForm.get('password').invalid &&
+              signupForm.get('password').touched
+            "
+          >
+            Password is required
+          </mat-error>
+        </mat-form-field>
+        <button [disabled]="signupForm.invalid" mat-button [type]="'submit'">
+          Sign up
+          <mat-icon>how_to_reg</mat-icon>
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

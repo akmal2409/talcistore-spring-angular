@@ -1,0 +1,100 @@
+nav {
+  color: #f4f4f4;
+
+  .logo {
+    font-weight: 800;
+    @apply pb-1 pr-1 text-2xl md:text-4xl text-white;
+
+    @screen lg {
+      @apply pr-3;
+    }
+  }
+
+  .toggler {
+    @apply pl-1;
+
+    @screen md {
+      @apply pl-2;
+    }
+
+    @screen lg {
+      @apply pl-10;
+    }
+    mat-icon {
+      font-size: 40px;
+      @apply p-0 m-0;
+    }
+  }
+
+  .search-bar {
+    width: 40%;
+
+    @screen sm {
+      width: 60%;
+      height: 40px;
+    }
+
+    @screen md {
+      width: 50%;
+    }
+
+    @screen lg {
+      width: 600px;
+      height: 45px;
+    }
+
+    .search-box {
+      width: 100%;
+      color: #000;
+      font-weight: 500;
+      font-size: 0.8rem;
+      @apply text-sm md:text-lg rounded-full py-3 px-6 border border-transparent focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent;
+    }
+
+    fa-icon {
+      position: absolute;
+      top: 25%;
+      right: 7%;
+      font-size: 1rem;
+      opacity: 0.7;
+
+      @screen md {
+        top: 4%;
+        right: 3%;
+        font-size: 1.7rem;
+      }
+    }
+
+    fa-icon:hover {
+      opacity: 1;
+      cursor: pointer;
+    }
+  }
+
+  .nav-links {
+    a {
+      display: inline-block;
+      margin-left: 6px;
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+
+    @screen md {
+      a {
+        margin-left: 10px;
+      }
+    }
+
+    @screen lg {
+      a {
+        margin-left: 15px;
+      }
+    }
+
+    a:hover,
+    a:active,
+    a.active {
+      @apply text-blue-400;
+    }
+  }
+}

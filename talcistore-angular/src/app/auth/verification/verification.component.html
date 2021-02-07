@@ -1,0 +1,33 @@
+<div
+  class="container lg:container my-28 mx-auto h-full flex flex-col justify-items-center items-center"
+>
+  <mat-card class="custom-card">
+    <mat-card-header class="space-y-10">
+      <mat-card-title *ngIf="!showSpinner">
+        <fa-icon
+          class="block text-green-600 text-center"
+          *ngIf="success"
+          [icon]="checkIcon"
+        ></fa-icon>
+        <fa-icon
+          class="block text-red-600 text-center"
+          *ngIf="!success"
+          [icon]="exlamationIcon"
+        ></fa-icon>
+        Account Verification
+        {{ success ? "Successfull" : "Failed" }}</mat-card-title
+      >
+      <mat-card-title *ngIf="showSpinner"> Verifying... </mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="card-content">
+      <mat-spinner
+        class="block"
+        *ngIf="showSpinner"
+        [color]="'accent'"
+      ></mat-spinner>
+      <a [routerLink]="['/login']" mat-button *ngIf="success && !showSpinner"
+        >Login</a
+      >
+    </mat-card-content>
+  </mat-card>
+</div>
