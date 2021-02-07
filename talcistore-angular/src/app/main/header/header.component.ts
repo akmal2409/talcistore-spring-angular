@@ -7,6 +7,7 @@ import {
   faUser,
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
+import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -20,13 +21,19 @@ export class HeaderComponent implements OnInit {
   shoppingCartIcon = faShoppingCart;
   signInIcon = faSignInAlt;
   signUpIcon = faUserPlus;
+  username: string;
 
-  isLoggedIn: boolean = false;
+  isLoggedIn: boolean;
 
   @Output() sidebarToggle = new EventEmitter<any>();
-  constructor() {}
+  constructor(private authService: AuthService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authService.loggedIn.subscribe((status) => {
+      this.isLoggedIn = status;
+      this.username = this.authService.getUsername();
+    });
+  }
 
   onToggleSidebar(): void {
     this.sidebarToggle.emit(null);

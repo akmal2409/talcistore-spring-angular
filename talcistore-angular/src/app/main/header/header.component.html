@@ -12,7 +12,7 @@
   <div
     class="md:container py-4 container max-w-lg mx-auto py-2 flex flex-row justify-around items-center"
   >
-    <h1 class="logo">talci</h1>
+    <h1 class="logo"><a [routerLink]="['']">talci</a></h1>
     <form class="search-bar flex flex-row relative p-0 m-0">
       <input class="search-box" placeholder="What are you looking for?" />
       <fa-icon [icon]="searchIcon" class="text-blue-600"></fa-icon>
@@ -34,7 +34,7 @@
       <ng-container *ngIf="isLoggedIn">
         <div class="greeting hidden sm:flex flex-col items-center">
           <p class="font-extralight text-sm">Welcome</p>
-          <p class="font-semibold">Akmal</p>
+          <p class="font-semibold">{{ username | capitalize }}</p>
         </div>
         <a><fa-icon [icon]="userIcon"></fa-icon></a>
       </ng-container>

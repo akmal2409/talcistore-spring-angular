@@ -50,6 +50,8 @@ export class SignupComponent implements OnInit {
           this.toastr.error('There was an error when creating your account!');
         }
       );
+    } else {
+      this.toastr.error('Please enter valid data');
     }
   }
 }

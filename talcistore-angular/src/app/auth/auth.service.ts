@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { AuthResponse } from './login/auth-response';
 import { LoginRequestPayload } from './login/login-request-payload';
 import { SignupRequestPayload } from './signup/signupRequest.payload';
@@ -12,6 +12,8 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
+  loggedIn: Subject<boolean> = new Subject();
+
   constructor(
     private http: HttpClient,
     private localStorage: LocalStorageService
@@ -45,6 +47,7 @@ export class AuthService {
           this.localStorage.store('refreshToken', data.refreshToken);
           this.localStorage.store('token', data.token);
           this.localStorage.store('username', data.username);
+          this.loggedIn.next(true);
         })
       );
   }
@@ -66,6 +69,23 @@ export class AuthService {
       );
   }
 
+  logout() {
+    const refreshTokenRequest = {
+      username: this.getUsername(),
+      refreshToken: this.getRefreshToken(),
+    };
+    this.http.post(
+      `${environment.apiUrl}/api/auth/logout`,
+      refreshTokenRequest
+    );
+
+    this.localStorage.clear('token');
+    this.localStorage.clear('username');
+    this.localStorage.clear('refreshToken');
+    this.localStorage.clear('expiresAt');
+    this.loggedIn.next(false);
+  }
+
   getJwtToken(): string {
     return this.localStorage.retrieve('token');
   }
@@ -76,5 +96,9 @@ export class AuthService {
 
   getRefreshToken(): string {
     return this.localStorage.retrieve('refreshToken');
+  }
+
+  isLoggedIn(): boolean {
+    return this.getJwtToken() !== null;
   }
 }

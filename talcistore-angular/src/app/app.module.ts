@@ -16,6 +16,8 @@ import { SignupComponent } from './auth/signup/signup.component';
 import { LoginComponent } from './auth/login/login.component';
 import { VerificationComponent } from './auth/verification/verification.component';
 import { ToastrModule } from 'ngx-toastr';
+import { CapitalizePipe } from './shared/capitalize.pipe';
+import { ProductListComponent } from './main/products/product-list/product-list.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { ToastrModule } from 'ngx-toastr';
     SignupComponent,
     LoginComponent,
     VerificationComponent,
+    CapitalizePipe,
+    ProductListComponent,
   ],
   imports: [
     BrowserModule,

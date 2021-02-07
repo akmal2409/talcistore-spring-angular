@@ -10,7 +10,12 @@
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
         <mat-form-field class="field">
           <mat-label>Username</mat-label>
-          <input matInput placeholder="johnDoe" formControlName="username" />
+          <input
+            matInput
+            placeholder="johnDoe"
+            formControlName="username"
+            autofocus
+          />
           <mat-error
             *ngIf="
               loginForm.get('username').invalid &&
@@ -46,9 +51,20 @@
           </mat-error>
         </mat-form-field>
         <button [disabled]="loginForm.invalid" mat-button [type]="'submit'">
-          Sign up
+          Login
           <mat-icon>how_to_reg</mat-icon>
         </button>
+        <span>
+          Not registered?
+          <a
+            [routerLink]="['/sign-up']"
+            [type]="'button'"
+            mat-button
+            [color]="'accent'"
+          >
+            Sign Up
+          </a>
+        </span>
       </form>
     </mat-card-content>
   </mat-card>

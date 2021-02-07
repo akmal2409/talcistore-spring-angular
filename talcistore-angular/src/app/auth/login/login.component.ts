@@ -32,8 +32,8 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
-    this.showSpinner = true;
     if (this.loginForm.valid) {
+      this.showSpinner = true;
       this.authService.login(this.loginForm.value).subscribe(
         () => {
           this.showSpinner = false;
@@ -45,6 +45,8 @@ export class LoginComponent implements OnInit {
           this.toastr.error('Login failed. Try again');
         }
       );
+    } else {
+      this.toastr.error('Please enter valid credentials');
     }
   }
 }
