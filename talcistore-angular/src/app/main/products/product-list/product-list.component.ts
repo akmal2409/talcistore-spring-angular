@@ -65,6 +65,10 @@ export class ProductListComponent implements OnInit {
   }
 
   getRating(product: ProductModel): number {
-    return Math.round(product.rating);
+    if (product.rating !== null) {
+      return Math.round(product.rating);
+    } else {
+      return 0;
+    }
   }
 }

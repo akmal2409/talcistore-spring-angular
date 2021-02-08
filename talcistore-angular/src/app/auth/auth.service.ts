@@ -65,6 +65,7 @@ export class AuthService {
       .pipe(
         tap((data: AuthResponse) => {
           this.localStorage.store('token', data.token);
+          this.loggedIn.next(true);
         })
       );
   }

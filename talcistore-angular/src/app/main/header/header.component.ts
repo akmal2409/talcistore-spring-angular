@@ -1,4 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Output,
+  EventEmitter,
+  OnDestroy,
+} from '@angular/core';
 import {
   faHeart,
   faSearch,
@@ -7,6 +13,7 @@ import {
   faUser,
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 
 @Component({
@@ -14,7 +21,7 @@ import { AuthService } from 'src/app/auth/auth.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   searchIcon = faSearch;
   userIcon = faUser;
   heartIcon = faHeart;
@@ -24,12 +31,15 @@ export class HeaderComponent implements OnInit {
   username: string;
 
   isLoggedIn: boolean;
+  loginStatusSub: Subscription;
 
   @Output() sidebarToggle = new EventEmitter<any>();
   constructor(private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.authService.loggedIn.subscribe((status) => {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    this.username = this.authService.getUsername();
+    this.loginStatusSub = this.authService.loggedIn.subscribe((status) => {
       this.isLoggedIn = status;
       this.username = this.authService.getUsername();
     });
@@ -37,5 +47,9 @@ export class HeaderComponent implements OnInit {
 
   onToggleSidebar(): void {
     this.sidebarToggle.emit(null);
+  }
+
+  ngOnDestroy(): void {
+    this.loginStatusSub.unsubscribe();
   }
 }

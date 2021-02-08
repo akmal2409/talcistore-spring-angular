@@ -1,6 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { CategoryModel } from 'src/app/models/category.model';
 import { CategoryService } from 'src/app/services/category.service';
@@ -10,10 +11,11 @@ import { CategoryService } from 'src/app/services/category.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild('sidenav') sidenav: MatSidenav;
   categories: CategoryModel[] = [];
   loggedIn: boolean;
+  loginStatusSub: Subscription;
 
   constructor(
     private categoryService: CategoryService,
@@ -25,7 +27,8 @@ export class HomeComponent implements OnInit {
     this.categoryService.fetchCategories().subscribe((categories) => {
       this.categories = categories;
     });
-    this.authService.loggedIn.subscribe((status) => {
+    this.loggedIn = this.authService.isLoggedIn();
+    this.loginStatusSub = this.authService.loggedIn.subscribe((status) => {
       this.loggedIn = status;
     });
   }
@@ -36,6 +39,7 @@ export class HomeComponent implements OnInit {
 
   onLogout(): void {
     this.authService.logout();
+    this.router.navigate(['/login']);
   }
 
   onLogin(): void {
@@ -44,5 +48,9 @@ export class HomeComponent implements OnInit {
 
   onSignup(): void {
     this.router.navigate(['/sign-up']);
+  }
+
+  ngOnDestroy(): void {
+    this.loginStatusSub.unsubscribe();
   }
 }
