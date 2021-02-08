@@ -16,10 +16,14 @@
             formControlName="username"
             autofocus
           />
+          <mat-error *ngIf="signupForm.get('username').errors?.usernameTaken">
+            Username is taken
+          </mat-error>
           <mat-error
             *ngIf="
               signupForm.get('username').invalid &&
-              signupForm.get('username').touched
+              signupForm.get('username').touched &&
+              signupForm.get('username').errors['required']
             "
           >
             Username is required
@@ -32,6 +36,9 @@
             placeholder="johnDoe@email.com"
             formControlName="email"
           />
+          <mat-error *ngIf="signupForm.get('email').errors?.emailTaken">
+            Email is taken
+          </mat-error>
           <mat-error
             *ngIf="
               signupForm.get('email').invalid && signupForm.get('email').touched

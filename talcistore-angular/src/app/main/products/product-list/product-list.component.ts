@@ -58,7 +58,7 @@ export class ProductListComponent implements OnInit {
 
   getImage(product: ProductModel): string {
     if (product.imgUrl === null || product.imgUrl.length < 1) {
-      return 'https://748073e22e8db794416a-cc51ef6b37841580002827d4d94d19b6.ssl.cf3.rackcdn.com/not-found.png';
+      return 'https://www.uejecutivos.cl/img/nophoto.png';
     } else {
       return product.imgUrl;
     }

@@ -3,7 +3,12 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { ToastrService } from 'ngx-toastr';
+import { Observable } from 'rxjs';
 import { AuthService } from '../auth.service';
+import { of } from 'rxjs';
+import { debounceTime, map, switchMap } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-signup',
@@ -20,7 +25,8 @@ export class SignupComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -29,8 +35,16 @@ export class SignupComponent implements OnInit {
 
   initForm(): void {
     this.signupForm = new FormGroup({
-      username: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
+      username: new FormControl(
+        '',
+        [Validators.required],
+        this.usernameAsyncValidator.bind(this)
+      ),
+      email: new FormControl(
+        '',
+        [Validators.required, Validators.email],
+        this.emailAsyncValidator.bind(this)
+      ),
       password: new FormControl('', [Validators.required]),
     });
   }
@@ -53,5 +67,33 @@ export class SignupComponent implements OnInit {
     } else {
       this.toastr.error('Please enter valid data');
     }
+  }
+
+  usernameAsyncValidator(
+    control: FormControl
+  ): Observable<{ usernameTaken: boolean } | null> {
+    if (!control.value) {
+      return of(null);
+    }
+    return of(control.value).pipe(
+      debounceTime(500),
+      switchMap((username) => {
+        return this.authService.checkUsernameValidity(username);
+      })
+    );
+  }
+
+  emailAsyncValidator(
+    control: FormControl
+  ): Observable<{ emailTaken: boolean } | null> {
+    if (!control.value) {
+      return of(null);
+    }
+    return of(control.value).pipe(
+      debounceTime(500),
+      switchMap((email) => {
+        return this.authService.checkEmailValidity(email);
+      })
+    );
   }
 }

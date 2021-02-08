@@ -13,6 +13,7 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   showPassword: boolean = false;
   showSpinner: boolean = false;
+  isDisabled: boolean = false;
 
   constructor(
     private router: Router,
@@ -37,11 +38,20 @@ export class LoginComponent implements OnInit {
       this.authService.login(this.loginForm.value).subscribe(
         () => {
           this.showSpinner = false;
+          this.isDisabled = false;
           this.router.navigate(['/']);
           this.toastr.success('You have successfully logged in');
         },
-        () => {
+        (error) => {
           this.showSpinner = false;
+          if (
+            error.error !== undefined &&
+            error.error.trace.includes('User is disabled')
+          ) {
+            this.isDisabled = true;
+          } else {
+            this.isDisabled = false;
+          }
           this.toastr.error('Login failed. Try again');
         }
       );

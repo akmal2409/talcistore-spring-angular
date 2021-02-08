@@ -1,12 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Observable, Subject } from 'rxjs';
 import { AuthResponse } from './login/auth-response';
 import { LoginRequestPayload } from './login/login-request-payload';
 import { SignupRequestPayload } from './signup/signupRequest.payload';
-import { tap } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -101,5 +102,45 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return this.getJwtToken() !== null;
+  }
+
+  checkUsernameValidity(username: string) {
+    return this.http
+      .get<{ available: boolean }>(
+        `${environment.apiUrl}/api/auth/check-username/`,
+        {
+          params: new HttpParams().set('username', username),
+        }
+      )
+      .pipe(
+        map((resp) => {
+          if (resp.available === false) {
+            return { usernameTaken: true };
+          }
+          return null;
+        }),
+        catchError(() => of(null))
+      );
+  }
+
+  checkEmailValidity(email: string) {
+    let params = new HttpParams();
+    params.append('email', email);
+    return this.http
+      .get<{ available: boolean }>(
+        `${environment.apiUrl}/api/auth/check-email/`,
+        {
+          params: new HttpParams().set('email', email),
+        }
+      )
+      .pipe(
+        map((resp) => {
+          if (resp.available === false) {
+            return { emailTaken: true };
+          }
+          return null;
+        }),
+        catchError(() => of(null))
+      );
   }
 }

@@ -8,6 +8,9 @@
     </mat-card-content>
     <mat-card-content *ngIf="!showSpinner">
       <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <div class="warning-message" *ngIf="isDisabled">
+          Your account is not activated
+        </div>
         <mat-form-field class="field">
           <mat-label>Username</mat-label>
           <input

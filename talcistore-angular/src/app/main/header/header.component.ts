@@ -15,6 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
+import { SidenavService } from 'src/app/services/sidenav.service';
 
 @Component({
   selector: 'app-header',
@@ -33,8 +34,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   isLoggedIn: boolean;
   loginStatusSub: Subscription;
 
-  @Output() sidebarToggle = new EventEmitter<any>();
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private sidenavService: SidenavService
+  ) {}
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
@@ -46,7 +49,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   onToggleSidebar(): void {
-    this.sidebarToggle.emit(null);
+    this.sidenavService.open();
   }
 
   ngOnDestroy(): void {

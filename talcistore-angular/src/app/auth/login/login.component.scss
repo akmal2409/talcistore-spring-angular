@@ -2,12 +2,22 @@
   height: 90%;
   @apply container lg:container mx-auto flex flex-col items-center justify-center;
   .signup-card {
+    width: 100%;
+    height: 65%;
+  }
+
+  @screen sm {
     width: 70%;
-    height: 40%;
+    height: 55%;
   }
 
   @screen lg {
     width: 40%;
+    hegith: 40%;
+  }
+
+  @screen xl {
+    width: 30%;
   }
 
   form {
@@ -24,4 +34,11 @@
       margin-top: 2rem !important;
     }
   }
+}
+
+.warning-message {
+  width: 100%;
+  height: 2.3rem;
+  text-align: center;
+  @apply bg-red-500 p-2 font-semibold text-sm rounded-md;
 }

@@ -1,19 +1,26 @@
 <mat-sidenav-container fullscreen (backdropClick)="close()">
   <mat-sidenav class="sidenav" #sidenav (keydown.escape)="close()" disableClose>
+    <div class="btn-wrapper">
+      <button (click)="close()" type="button" class="close-sidenav-btn">
+        <fa-icon [icon]="closeIcon"></fa-icon>
+      </button>
+    </div>
     <ng-container *ngIf="!loggedIn">
       <h4 class="mat-title">General</h4>
       <mat-nav-list>
-        <a mat-list-item [routerLink]="['/login']">Login</a>
-        <a mat-list-item [routerLink]="['/sign-up']">Signup</a>
+        <a (click)="close()" mat-list-item [routerLink]="['/login']">Login</a>
+        <a (click)="close()" mat-list-item [routerLink]="['/sign-up']"
+          >Signup</a
+        >
       </mat-nav-list>
     </ng-container>
     <ng-container *ngIf="loggedIn">
       <h4 class="mat-title">Profile</h4>
       <mat-nav-list>
-        <a mat-list-item (click)="onLogout()">Logout</a>
-        <a mat-list-item>Shopping Cart</a>
-        <a mat-list-item>Account</a>
-        <a mat-list-item>Orders</a>
+        <a (click)="close()" mat-list-item (click)="onLogout()">Logout</a>
+        <a (click)="close()" mat-list-item>Shopping Cart</a>
+        <a (click)="close()" mat-list-item>Account</a>
+        <a (click)="close()" mat-list-item>Orders</a>
       </mat-nav-list>
     </ng-container>
     <h4 class="mat-title">Categories</h4>
@@ -21,6 +28,7 @@
       <a
         *ngFor="let category of categories"
         mat-list-item
+        (click)="close()"
         [routerLink]="['/category', category.id, 'products']"
         >{{ category.categoryName }}</a
       >
@@ -28,7 +36,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content class="main-content">
-    <app-header (sidebarToggle)="sidenav.open()"></app-header>
+    <app-header></app-header>
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

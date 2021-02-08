@@ -1,26 +1,36 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
 import { Router } from '@angular/router';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/auth.service';
 import { CategoryModel } from 'src/app/models/category.model';
 import { CategoryService } from 'src/app/services/category.service';
+import { SidenavService } from 'src/app/services/sidenav.service';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('sidenav') sidenav: MatSidenav;
   categories: CategoryModel[] = [];
   loggedIn: boolean;
   loginStatusSub: Subscription;
+  closeIcon = faTimes;
 
   constructor(
     private categoryService: CategoryService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private sidenavService: SidenavService
   ) {}
 
   ngOnInit(): void {
@@ -33,8 +43,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngAfterViewInit(): void {
+    this.sidenavService.setSidenav(this.sidenav);
+  }
+
   close() {
-    this.sidenav.close();
+    this.sidenavService.close();
+  }
+
+  open() {
+    this.sidenavService.open();
   }
 
   onLogout(): void {
