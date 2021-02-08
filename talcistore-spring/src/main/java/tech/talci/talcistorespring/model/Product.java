@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.URL;
 
 
 import javax.persistence.*;
@@ -15,7 +16,6 @@ import javax.validation.constraints.NotEmpty;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -55,11 +55,17 @@ public class Product {
     @Min(value = 0, message = "Amount in stock must be greater than {value}")
     private Long leftInStock;
 
+    @URL(message = "Image url is not valid")
+    private String imgUrl;
+
     @DecimalMax(value = "5.0", inclusive = true, message = "Rating cannot be greater than 5.0")
     @DecimalMin(value = "1.0", inclusive = true, message = "Rating cannot be smaller than 1.0")
     private Double rating;
 
+    @Min(value = 0)
     private Long orderCount;
+
+    private BigDecimal shippingCost;
 
     private LocalDate addedOn;
 
@@ -70,7 +76,7 @@ public class Product {
     @PrePersist
     private void setupProduct() {
         this.orderCount = 0L;
-        this.addedOn = LocalDate.now();
         this.rating = 1.0;
+        this.addedOn = LocalDate.now();
     }
 }

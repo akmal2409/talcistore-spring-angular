@@ -32,6 +32,10 @@ public class ProductDto {
     @NotEmpty(message = "Producer is required")
     private String producer;
 
+    private String imgUrl;
+
+    private BigDecimal shippingCost;
+
     @Min(value = 0, message = "Amount in stock must be greater than {value}")
     private Long leftInStock;
     private Double rating;
