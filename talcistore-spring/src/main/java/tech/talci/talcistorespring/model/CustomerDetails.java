@@ -28,21 +28,14 @@ public class CustomerDetails {
 
     @OneToOne(fetch = LAZY, mappedBy = "customerDetails", cascade = CascadeType.ALL)
     private User user;
-    @NotEmpty(message = "First name is required")
+
     private String firstName;
-    @NotEmpty(message = "Last name is required")
+
     private String lastName;
-    @NotNull(message = "Birth date is required")
-    @DateTimeFormat(pattern = "dd/MM/YYYY")
     private LocalDate birthDate;
-    @NotEmpty(message = "Phone is required")
     private String phoneNumber;
-    @NotEmpty(message = "Country is required")
     private String country;
-    @NotEmpty(message = "City is required")
     private String city;
-    @NotEmpty(message = "Post code is required")
     private String postCode;
-    @NotEmpty(message = "Address is required")
     private String address;
 }
