@@ -24,6 +24,7 @@
     "@fortawesome/angular-fontawesome": "^0.8.2",
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-solid-svg-icons": "^5.15.2",
+    "@ngbmodule/material-carousel": "^0.7.1",
     "@ngneat/tailwind": "^6.0.3",
     "angular-star-rating": "^4.0.0-beta.3",
     "d-ng-rating": "^2.0.1",

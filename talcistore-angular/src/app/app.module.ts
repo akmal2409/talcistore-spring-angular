@@ -19,6 +19,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { CapitalizePipe } from './shared/capitalize.pipe';
 import { ProductListComponent } from './main/products/product-list/product-list.component';
 import { NgRatingModule } from 'd-ng-rating';
+import { MatCarouselModule } from '@ngbmodule/material-carousel';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { NgRatingModule } from 'd-ng-rating';
     }),
     HammerModule,
     NgRatingModule,
+    MatCarouselModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],

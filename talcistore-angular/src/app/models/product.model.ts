@@ -13,4 +13,5 @@ export class ProductModel {
   rating?: number;
   sellerId?: number;
   imgUrl: string;
+  shippingCost: number;
 }

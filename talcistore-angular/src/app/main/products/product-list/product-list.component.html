@@ -1,10 +1,7 @@
 <div class="product-grid">
   <mat-card class="product-card" *ngFor="let product of products">
     <a [routerLink]="['/']">
-      <img
-        mat-card-image
-        src="http://gammalb.com/wp-content/uploads/2020/04/hp2-19.png"
-      />
+      <img mat-card-image [src]="getImage(product)" />
     </a>
     <mat-card-header>
       <mat-card-title
@@ -13,15 +10,19 @@
         }}</a></mat-card-title
       >
       <mat-card-subtitle>Laptops and Hardware</mat-card-subtitle>
-      <d-ng-rating [size]="5" [rating]="'2'" [readonly]="true"></d-ng-rating>
+      <d-ng-rating
+        [size]="5"
+        [rating]="getRating(product)"
+        [readonly]="true"
+      ></d-ng-rating>
       <div class="price-box">
         <div class="price">
           <span>{{ product.pricePerUnit }}</span>
           <mat-icon>euro_symbol</mat-icon>
         </div>
         <div>
-          <p class="shipping text-indigo-600">
-            Free Shipping
+          <p class="shipping" [ngClass]="getShippingClass(product)">
+            {{ getShipping(product) }}
             <fa-icon [icon]="shippingIcon"></fa-icon>
           </p>
         </div>
@@ -36,3 +37,13 @@
     </mat-card-header>
   </mat-card>
 </div>
+
+<mat-paginator
+  (page)="onNextPage($event)"
+  class="mt-5"
+  [length]="pageLength"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions"
+  [pageIndex]="pageIndex"
+>
+</mat-paginator>
