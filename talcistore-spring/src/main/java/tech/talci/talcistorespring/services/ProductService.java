@@ -20,6 +20,7 @@ import tech.talci.talcistorespring.repositories.ProductRepository;
 import tech.talci.talcistorespring.repositories.UserRepository;
 import tech.talci.talcistorespring.util.PaginationUtil;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -146,5 +147,16 @@ public class ProductService {
         }
 
         productRepository.delete(fetchedProduct);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<ProductDto> getAllOrderedByRating(Integer page, Integer size) {
+        PageRequest pageRequest = PaginationUtil
+                .productPageRequestByRating(page, size);
+
+        Page<ProductDto> fetchedPage = productRepository.findAll(pageRequest)
+                .map(productMapper::mapToProductDto);
+
+        return PaginationUtil.convertToPageResponse(fetchedPage);
     }
 }

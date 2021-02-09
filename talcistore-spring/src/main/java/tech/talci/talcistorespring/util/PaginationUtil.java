@@ -29,4 +29,10 @@ public final class PaginationUtil {
 
         return pageRequest;
     }
+
+    public static PageRequest productPageRequestByRating(Integer page, Integer size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("rating").descending());
+
+        return pageRequest;
+    }
 }

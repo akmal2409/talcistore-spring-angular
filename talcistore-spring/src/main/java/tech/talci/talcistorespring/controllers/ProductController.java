@@ -6,6 +6,8 @@ import tech.talci.talcistorespring.dto.PageResponse;
 import tech.talci.talcistorespring.dto.ProductDto;
 import tech.talci.talcistorespring.services.ProductService;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping(ProductController.BASE_URL)
@@ -29,13 +31,19 @@ public class ProductController {
         return productService.getAll(page, size, sortByPrice, desc);
     }
 
-    @GetMapping("/search-product/{nameOrDescription}")
-    public PageResponse<ProductDto> searchFor(@PathVariable String nameOrDescription,
+    @GetMapping("/top-rated")
+    public PageResponse<ProductDto> getAllSortedByRating(@RequestParam(defaultValue = "0") Integer page,
+                                                         @RequestParam(defaultValue = "20") Integer size) {
+        return productService.getAllOrderedByRating(page, size);
+    }
+
+    @GetMapping("/search-product")
+    public PageResponse<ProductDto> searchFor(@RequestParam String text,
                                               @RequestParam(defaultValue = "0") Integer page,
                                               @RequestParam(defaultValue = "15") Integer size,
                                               @RequestParam(required = false) boolean sortByPrice,
                                               @RequestParam(required = false) boolean desc) {
-        return productService.searchByKeyword(nameOrDescription, page, size, sortByPrice, desc);
+        return productService.searchByKeyword(text, page, size, sortByPrice, desc);
     }
 
     @GetMapping("/{id}")

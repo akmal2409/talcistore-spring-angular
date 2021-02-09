@@ -8,6 +8,8 @@ import tech.talci.talcistorespring.model.Category;
 import tech.talci.talcistorespring.model.Product;
 import tech.talci.talcistorespring.model.User;
 
+import java.util.List;
+
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findAll(Pageable pageable);
