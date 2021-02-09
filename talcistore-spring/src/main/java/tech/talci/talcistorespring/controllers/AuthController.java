@@ -58,13 +58,13 @@ public class AuthController {
         return authService.authenticate(loginRequest);
     }
 
-    @GetMapping("/check-username/{username}")
-    public Map<String, Boolean>checkUsernameAvailability(@PathVariable String username) {
+    @GetMapping("/check-username/")
+    public Map<String, Boolean> checkUsernameAvailability(@RequestParam String username) {
         return singletonMap("available", authService.isUsernameAvailable(username));
     }
 
-    @GetMapping("/check-email/{email}")
-    public Map<String, Boolean> checkEmailAvailability(@PathVariable String email) {
+    @GetMapping("/check-email/")
+    public Map<String, Boolean> checkEmailAvailability(@RequestParam String email) {
         return singletonMap("available", authService.isEmailAvailable(email));
     }
 
