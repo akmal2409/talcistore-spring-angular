@@ -20,6 +20,7 @@ import { CapitalizePipe } from './shared/capitalize.pipe';
 import { ProductListComponent } from './main/products/product-list/product-list.component';
 import { NgRatingModule } from 'd-ng-rating';
 import { MatCarouselModule } from '@ngbmodule/material-carousel';
+import { ProductComponent } from './main/products/product/product.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MatCarouselModule } from '@ngbmodule/material-carousel';
     VerificationComponent,
     CapitalizePipe,
     ProductListComponent,
+    ProductComponent,
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,7 @@ import {
   EventEmitter,
   OnDestroy,
 } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import {
   faHeart,
   faSearch,
@@ -14,8 +15,10 @@ import {
   faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
+import { debounceTime, filter, switchMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/auth.service';
 import { SidenavService } from 'src/app/services/sidenav.service';
+import { ProductService } from '../products/product.service';
 
 @Component({
   selector: 'app-header',
@@ -30,14 +33,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
   signInIcon = faSignInAlt;
   signUpIcon = faUserPlus;
   username: string;
+  searchForm: FormGroup;
+  searchResult: string[] = [];
+  isLoading = false;
 
   isLoggedIn: boolean;
   loginStatusSub: Subscription;
 
   constructor(
     private authService: AuthService,
-    private sidenavService: SidenavService
-  ) {}
+    private sidenavService: SidenavService,
+    private productService: ProductService
+  ) {
+    this.searchForm = new FormGroup({
+      text: new FormControl(''),
+    });
+  }
 
   ngOnInit(): void {
     this.isLoggedIn = this.authService.isLoggedIn();
@@ -46,6 +57,27 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.isLoggedIn = status;
       this.username = this.authService.getUsername();
     });
+    this.onChanges();
+  }
+
+  onChanges(): void {
+    this.searchForm
+      .get('text')
+      .valueChanges.pipe(
+        filter((val) => val.trim().length > 0),
+        debounceTime(500),
+        switchMap((value: string) => {
+          return this.productService.searchValue(value);
+        })
+      )
+      .subscribe((result: { options: string[] }) => {
+        // console.log(result.options);
+        this.searchResult = result.options;
+      });
+  }
+
+  displayFn(text: string): string {
+    return text;
   }
 
   onToggleSidebar(): void {

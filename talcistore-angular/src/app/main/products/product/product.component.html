@@ -1,0 +1,37 @@
+<mat-card class="product-card">
+  <a [routerLink]="['/']">
+    <img mat-card-image [src]="getImage()" />
+  </a>
+  <mat-card-header>
+    <mat-card-title
+      ><a [routerLink]="['/product', product.id]">{{
+        product.productName
+      }}</a></mat-card-title
+    >
+    <mat-card-subtitle>Laptops and Hardware</mat-card-subtitle>
+    <d-ng-rating
+      [size]="5"
+      [rating]="getRating()"
+      [readonly]="true"
+    ></d-ng-rating>
+    <div class="price-box">
+      <div class="price">
+        <span>{{ product.pricePerUnit }}</span>
+        <mat-icon>euro_symbol</mat-icon>
+      </div>
+      <div>
+        <p class="shipping" [ngClass]="getShippingClass()">
+          {{ getShipping() }}
+          <fa-icon [icon]="shippingIcon"></fa-icon>
+        </p>
+      </div>
+    </div>
+    <div class="order-section">
+      <p class="mt-2 mb-0">Orders: {{ product.orderCount }}</p>
+      <button mat-button [color]="'accent'">
+        To cart
+        <mat-icon> add_shopping_cart</mat-icon>
+      </button>
+    </div>
+  </mat-card-header>
+</mat-card>

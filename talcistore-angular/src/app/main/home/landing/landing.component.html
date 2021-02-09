@@ -1,4 +1,4 @@
-<div class="sm:container mx-auto mt-28">
+<div class="lg:container mx-auto mt-28" id="main-container">
   <div class="h-auto">
     <mat-carousel
       timings="250ms ease-in"
@@ -7,7 +7,7 @@
       color="accent"
       maxWidth="auto"
       proportion="25"
-      slides="5"
+      slides="7"
       [loop]="true"
       [hideArrows]="false"
       [hideIndicators]="false"
@@ -28,10 +28,10 @@
   <mat-divider></mat-divider>
   <mat-card>
     <mat-card-header>
-      <h1 class="font-bold text-3xl">Top products</h1>
+      <h1 class="font-bold text-3xl">Top Rated Products</h1>
     </mat-card-header>
     <mat-card-content>
-      <app-product-list></app-product-list>
+      <app-product-list [previewMode]="true"></app-product-list>
     </mat-card-content>
   </mat-card>
 </div>
