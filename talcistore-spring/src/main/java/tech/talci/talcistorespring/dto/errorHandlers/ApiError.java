@@ -23,17 +23,14 @@ public class ApiError {
         timeStamp = LocalDateTime.now();
     }
 
-    public static ApiError withStatus(HttpStatus status) {
-        ApiError error = new ApiError();
-        error.setStatus(status);
-        return error;
+    public ApiError(HttpStatus status) {
+        this();
+        this.status = status;
     }
 
-    public static ApiError withStatusAndMessage(HttpStatus status, String message, Throwable ex) {
-        ApiError error = new ApiError();
-        error.setStatus(status);
-        error.setMessage(message);
-        error.setDebugMessage(ex.getLocalizedMessage());
-        return error;
+    public ApiError(HttpStatus status, String message, Throwable ex) {
+        this(status);
+        this.message = message;
+        this.debugMessage = ex.getLocalizedMessage();
     }
 }
