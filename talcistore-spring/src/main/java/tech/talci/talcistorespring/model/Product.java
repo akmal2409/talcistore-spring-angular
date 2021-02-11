@@ -56,9 +56,6 @@ public class Product {
     @Min(value = 0, message = "Amount in stock must be greater than {value}")
     private Long leftInStock;
 
-    @URL(message = "Image url is not valid")
-    private String imgUrl;
-
     @DecimalMax(value = "5.0", inclusive = true, message = "Rating cannot be greater than 5.0")
     @DecimalMin(value = "1.0", inclusive = true, message = "Rating cannot be smaller than 1.0")
     private Double rating;
