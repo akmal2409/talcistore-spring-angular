@@ -16,6 +16,7 @@ import javax.validation.constraints.NotEmpty;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -75,6 +76,9 @@ public class Product {
     @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "discount_id", referencedColumnName = "id")
     private Discount discount;
+
+    @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)
+    private List<ProductImage> images;
 
 
     @PrePersist
