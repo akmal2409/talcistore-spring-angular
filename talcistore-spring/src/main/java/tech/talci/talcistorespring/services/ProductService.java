@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tech.talci.talcistorespring.dto.PageResponse;
 import tech.talci.talcistorespring.dto.ProductDto;
+import tech.talci.talcistorespring.dto.SearchResultOptions;
 import tech.talci.talcistorespring.dto.mappers.ProductMapper;
 import tech.talci.talcistorespring.exceptions.ResourceNotFoundException;
 import tech.talci.talcistorespring.exceptions.UnauthorizedActionException;
@@ -158,5 +159,16 @@ public class ProductService {
                 .map(productMapper::mapToProductDto);
 
         return PaginationUtil.convertToPageResponse(fetchedPage);
+    }
+
+    @Transactional(readOnly = true)
+    public SearchResultOptions getSearchResultOptions(String text) {
+        List<Product> products = productRepository.getAllSearchOptions(text);
+
+        return new SearchResultOptions(
+                products.stream()
+                .map(Product::getProductName)
+                .collect(Collectors.toList())
+        );
     }
 }

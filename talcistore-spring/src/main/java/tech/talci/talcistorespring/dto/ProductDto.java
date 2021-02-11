@@ -43,4 +43,6 @@ public class ProductDto {
     private LocalDate addedOn;
     private LocalDate lastUpdated;
     private Long sellerId;
+
+    private DiscountDto discount;
 }

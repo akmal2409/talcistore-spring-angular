@@ -21,6 +21,11 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "or lower(p.description) like lower(concat('%', :query, '%'))")
     Page<Product> findByProductNameOrDescriptionContaining(String query, Pageable pageable);
 
+    @Query("Select p from Product p where lower(p.productName) " +
+            "like lower(concat('%', :query, '%')) " +
+            "or lower(p.description) like lower(concat('%', :query, '%'))")
+    List<Product> getAllSearchOptions(String query);
+
     Page<Product> findBySeller(User seller, Pageable pageable);
 
     Long countByCategory(Category category);

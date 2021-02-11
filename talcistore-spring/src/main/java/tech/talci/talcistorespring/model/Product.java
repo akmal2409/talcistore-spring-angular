@@ -72,6 +72,10 @@ public class Product {
     @UpdateTimestamp
     private LocalDate lastUpdated;
 
+    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "discount_id", referencedColumnName = "id")
+    private Discount discount;
+
 
     @PrePersist
     private void setupProduct() {

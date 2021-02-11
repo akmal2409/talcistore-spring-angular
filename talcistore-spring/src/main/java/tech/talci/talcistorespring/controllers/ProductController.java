@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import tech.talci.talcistorespring.dto.PageResponse;
 import tech.talci.talcistorespring.dto.ProductDto;
+import tech.talci.talcistorespring.dto.SearchResultOptions;
 import tech.talci.talcistorespring.services.ProductService;
 
 import java.util.List;
@@ -44,6 +45,11 @@ public class ProductController {
                                               @RequestParam(required = false) boolean sortByPrice,
                                               @RequestParam(required = false) boolean desc) {
         return productService.searchByKeyword(text, page, size, sortByPrice, desc);
+    }
+
+    @GetMapping("/get-search-options")
+    public SearchResultOptions getSearchResultOptions(@RequestParam String text) {
+        return productService.getSearchResultOptions(text);
     }
 
     @GetMapping("/{id}")
