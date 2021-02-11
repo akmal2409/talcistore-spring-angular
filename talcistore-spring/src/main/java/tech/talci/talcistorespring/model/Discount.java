@@ -16,7 +16,7 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "discounts")
+@Table(name = "prouct_discounts")
 public class Discount {
 
     @Id
@@ -26,12 +26,8 @@ public class Discount {
     @Min(value = 1, message = "Discount percent cannot be smaller than {value}")
     @Max(value = 99, message = "Discount percent cannot be greater than {value}")
     private Integer percent;
-
-    @DateTimeFormat(pattern = "dd/MM/YYYY")
-    private LocalDate from;
-
-    @DateTimeFormat(pattern = "dd/MM/YYYY")
-    private LocalDate till;
+    private LocalDate validFrom;
+    private LocalDate validUntil;
 
     @OneToOne(fetch = LAZY, mappedBy = "discount")
     private Product product;

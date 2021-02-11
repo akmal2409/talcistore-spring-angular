@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faShippingFast } from '@fortawesome/free-solid-svg-icons';
+import { ProductImageModel } from 'src/app/models/product-image.model';
 import { ProductModel } from 'src/app/models/product.model';
+import { ImageService } from '../image.service';
 
 @Component({
   selector: 'app-product',
@@ -10,9 +12,15 @@ import { ProductModel } from 'src/app/models/product.model';
 export class ProductComponent implements OnInit {
   @Input() product: ProductModel;
   shippingIcon = faShippingFast;
-  constructor() {}
+  images: ProductImageModel[] = [];
 
-  ngOnInit(): void {}
+  constructor(private imageService: ImageService) {}
+
+  ngOnInit(): void {
+    this.imageService.fetchImages(this.product.id).subscribe((images) => {
+      this.images = images;
+    });
+  }
 
   getShipping(): string {
     if (this.product.shippingCost === null || this.product.shippingCost < 1) {
@@ -31,10 +39,10 @@ export class ProductComponent implements OnInit {
   }
 
   getImage(): string {
-    if (this.product.imgUrl === null || this.product.imgUrl.length < 1) {
+    if (this.images === null || this.images.length < 1) {
       return 'https://www.uejecutivos.cl/img/nophoto.png';
     } else {
-      return this.product.imgUrl;
+      return this.images[0].url;
     }
   }
 

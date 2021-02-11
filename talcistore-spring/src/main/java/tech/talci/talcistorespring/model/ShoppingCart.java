@@ -14,6 +14,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "shopping_carts")
 public class ShoppingCart {
 
     @Id

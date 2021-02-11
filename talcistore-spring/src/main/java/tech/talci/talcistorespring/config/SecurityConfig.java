@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import tech.talci.talcistorespring.controllers.AuthController;
 import tech.talci.talcistorespring.controllers.CategoryController;
+import tech.talci.talcistorespring.controllers.ImageController;
 import tech.talci.talcistorespring.controllers.ProductController;
 import tech.talci.talcistorespring.security.JwtRequestFilter;
 
@@ -46,6 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.GET, ProductController.BASE_URL + "/**")
                 .permitAll()
                 .mvcMatchers(HttpMethod.GET, CategoryController.BASE_URL + "/**")
+                .permitAll()
+                .mvcMatchers(HttpMethod.GET, ImageController.BASE_URL + "/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated();

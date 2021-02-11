@@ -4,6 +4,9 @@
   .signup-card {
     width: 100%;
     height: 65%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   @screen sm {

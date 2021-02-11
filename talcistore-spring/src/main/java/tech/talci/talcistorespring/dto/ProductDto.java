@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -21,6 +22,7 @@ public class ProductDto {
     private String productName;
 
     @NotEmpty(message = "Product description is required")
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @DecimalMin(value = "1.0", inclusive = true, message = "Price per unit must be greater than {value}")
@@ -31,8 +33,6 @@ public class ProductDto {
     private String countryOfOrigin;
     @NotEmpty(message = "Producer is required")
     private String producer;
-
-    private String imgUrl;
 
     private BigDecimal shippingCost;
 

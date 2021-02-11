@@ -20,6 +20,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @Entity
 @Builder
+@Table(name = "reviews")
 public class Review {
 
     @Id

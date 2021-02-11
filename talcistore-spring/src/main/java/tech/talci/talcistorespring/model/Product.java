@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.validator.constraints.URL;
 
 
 import javax.persistence.*;
@@ -26,6 +25,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @Entity
 @Builder
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -71,7 +71,7 @@ public class Product {
     private LocalDate lastUpdated;
 
     @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "discount_id", referencedColumnName = "id")
+    @JoinColumn(name = "discount_id")
     private Discount discount;
 
     @OneToMany(fetch = LAZY, cascade = CascadeType.ALL)

@@ -139,7 +139,7 @@ public class AuthService {
                 .body("Welcome to Talci Store. We are the biggest online retailer in the entire Europe!" +
                         " Thank you for choosing us, we will not let you down." +
                         " To start your journey, please activate your account by clicking the link below: \n" +
-                        websiteUrl + AuthController.BASE_URL + "/verify-account/" + token)
+                        websiteUrl + "/verify-account/" + token)
                 .build();
 
         mailService.sendMail(email);

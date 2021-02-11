@@ -14,6 +14,7 @@ import static javax.persistence.FetchType.LAZY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "cart_items")
 public class CartItem {
 
     @Id

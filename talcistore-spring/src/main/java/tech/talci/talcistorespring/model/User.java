@@ -22,6 +22,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @NoArgsConstructor
 @Entity
 @Builder
+@Table(name = "users")
 public class User {
 
     @Id

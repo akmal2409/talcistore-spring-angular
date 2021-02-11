@@ -1,3 +1,5 @@
+import { DiscountModel } from './discount.model';
+
 export class ProductModel {
   id?: number;
   addedOn: Date;
@@ -12,6 +14,6 @@ export class ProductModel {
   productName: string;
   rating?: number;
   sellerId?: number;
-  imgUrl: string;
   shippingCost: number;
+  discount?: DiscountModel;
 }
