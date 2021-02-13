@@ -31,6 +31,11 @@ public class CategoryController {
         return categoryService.getAll();
     }
 
+    @GetMapping("/{id}")
+    public CategoryDto getCategoryById(@PathVariable Long id) {
+        return categoryService.findById(id);
+    }
+
     @GetMapping("/check-name/{name}")
     public Map<String, Boolean> checkAvailabilityOfCategoryName(@PathVariable String name) {
         return singletonMap("available", categoryService.isCategoryNameAvailable(name));

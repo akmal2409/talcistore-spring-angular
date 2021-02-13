@@ -3,7 +3,13 @@ package tech.talci.talcistorespring.util;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.util.MultiValueMap;
 import tech.talci.talcistorespring.dto.PageResponse;
+import tech.talci.talcistorespring.exceptions.InvalidQueryFilterException;
+import tech.talci.talcistorespring.exceptions.TalciStoreException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class PaginationUtil {
 
@@ -16,23 +22,50 @@ public final class PaginationUtil {
     }
 
     public static PageRequest productPageRequest(Integer page, Integer size,
-                                        boolean sortByPrice, boolean desc) {
-        PageRequest pageRequest = PageRequest.of(page, size);
+                                                 MultiValueMap<String, String> filters) {
+        List<Sort.Order> orders = new ArrayList<Sort.Order>();
 
-        if (sortByPrice) {
-            pageRequest = PageRequest.of(page, size, Sort.by("pricePerUnit"));
+        if (filters.get("filter") == null) {
+            return PageRequest.of(page, size);
         }
 
-        if (desc) {
-            pageRequest = PageRequest.of(page, size, Sort.by("pricePerUnit").descending());
+        filters.get("filter").forEach(filter -> {
+            String[] query = filter.split(":");
+
+            if (query.length == 2 && isValidFilter(query)) {
+                Sort.Order order = new Sort.Order(getDirection(query[1]), query[0]);
+                orders.add(order);
+            }
+        });
+
+        if (orders.size() < 1) {
+            return PageRequest.of(page, size);
         }
 
-        return pageRequest;
+        return PageRequest.of(page, size, Sort.by(orders));
     }
 
-    public static PageRequest productPageRequestByRating(Integer page, Integer size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("rating").descending());
+    private static boolean isValidFilter(String[] query) {
+        switch (query[0]) {
+            case "pricePerUnit":
+            case "rating":
+            case "orderCount":
+            case "addedOn":
+            case "lastUpdated":
+            case "shippingCost":
+                return true;
+            default:
+                throw new InvalidQueryFilterException("Filter parameters are invalid");
+        }
+    }
 
-        return pageRequest;
+    private static Sort.Direction getDirection(String value) {
+        if (value.equalsIgnoreCase("desc")) {
+            return Sort.Direction.DESC;
+        } else if (value.equals("asc")) {
+            return Sort.Direction.ASC;
+        }
+
+        throw new InvalidQueryFilterException("Unknown query filter " + value);
     }
 }

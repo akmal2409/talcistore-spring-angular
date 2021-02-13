@@ -1,9 +1,9 @@
 package tech.talci.talcistorespring.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -15,9 +15,9 @@ public class DiscountDto {
 
     private Long id;
     private Integer percent;
-    @DateTimeFormat(pattern = "dd/MM/YYYY")
-    private LocalDate from;
-    @DateTimeFormat(pattern = "dd/MM/YYYY")
-    private LocalDate till;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private LocalDate validFrom;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private LocalDate validUntil;
     private Long productId;
 }

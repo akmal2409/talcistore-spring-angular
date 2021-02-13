@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 import tech.talci.talcistorespring.dto.PageResponse;
 import tech.talci.talcistorespring.dto.ProductDto;
 import tech.talci.talcistorespring.dto.SearchResultOptions;
@@ -50,9 +51,9 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<ProductDto> getAll(Integer page, Integer size, boolean sortByPrice, boolean desc) {
+    public PageResponse<ProductDto> getAll(Integer page, Integer size, MultiValueMap<String, String> filters) {
         PageRequest pageRequest = PaginationUtil
-                .productPageRequest(page, size, sortByPrice, desc);
+                .productPageRequest(page, size, filters);
 
         Page<ProductDto> fetchedPage = productRepository
                 .findAll(pageRequest)
@@ -73,9 +74,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public PageResponse<ProductDto> searchByKeyword(String nameOrDescription, Integer page, Integer size,
-                                                    boolean sortByPrice, boolean desc) {
+                                                    MultiValueMap<String, String> filters) {
         PageRequest pageRequest = PaginationUtil
-                .productPageRequest(page, size, sortByPrice, desc);
+                .productPageRequest(page, size, filters);
 
         Page<ProductDto> fetchedPage = productRepository
                 .findByProductNameOrDescriptionContaining(nameOrDescription, pageRequest)
@@ -86,13 +87,13 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public PageResponse<ProductDto> findAllByCategoryId(Long categoryId, Integer page, Integer size,
-                                                        boolean sortByPrice, boolean desc) {
+                                                        MultiValueMap<String, String> filters) {
 
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ResourceNotFoundException("Category was not found"));
 
         PageRequest pageRequest = PaginationUtil
-                .productPageRequest(page, size, sortByPrice, desc);
+                .productPageRequest(page, size, filters);
 
         Page<ProductDto> fetchedPage = productRepository
                 .findByCategory(category, pageRequest)
@@ -103,7 +104,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public PageResponse<ProductDto> findAllBySellerId(Long sellerId, Integer page, Integer size,
-                                                      boolean sortByPrice, boolean desc) {
+                                                      MultiValueMap<String, String> filters) {
         User seller = userRepository.findById(sellerId)
                 .orElseThrow(() -> new ResourceNotFoundException("Seller was not found"));
 
@@ -117,7 +118,7 @@ public class ProductService {
         }
 
         PageRequest pageRequest = PaginationUtil
-                .productPageRequest(page, size, sortByPrice, desc);
+                .productPageRequest(page, size, filters);
 
         Page<ProductDto> fetchedPage = productRepository.findBySeller(seller, pageRequest)
                 .map(productMapper::mapToProductDto);
@@ -150,16 +151,6 @@ public class ProductService {
         productRepository.delete(fetchedProduct);
     }
 
-    @Transactional(readOnly = true)
-    public PageResponse<ProductDto> getAllOrderedByRating(Integer page, Integer size) {
-        PageRequest pageRequest = PaginationUtil
-                .productPageRequestByRating(page, size);
-
-        Page<ProductDto> fetchedPage = productRepository.findAll(pageRequest)
-                .map(productMapper::mapToProductDto);
-
-        return PaginationUtil.convertToPageResponse(fetchedPage);
-    }
 
     @Transactional(readOnly = true)
     public SearchResultOptions getSearchResultOptions(String text) {

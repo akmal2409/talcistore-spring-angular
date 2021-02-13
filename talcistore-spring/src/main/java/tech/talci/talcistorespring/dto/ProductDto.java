@@ -1,5 +1,6 @@
 package tech.talci.talcistorespring.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,7 +41,11 @@ public class ProductDto {
     private Long leftInStock;
     private Double rating;
     private Long orderCount;
+
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate addedOn;
+
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDate lastUpdated;
     private Long sellerId;
 

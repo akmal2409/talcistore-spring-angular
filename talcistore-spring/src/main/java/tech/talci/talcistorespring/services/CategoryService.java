@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tech.talci.talcistorespring.dto.CategoryDto;
 import tech.talci.talcistorespring.dto.mappers.CategoryMapper;
 import tech.talci.talcistorespring.exceptions.CategoryManipulationException;
+import tech.talci.talcistorespring.exceptions.ResourceNotFoundException;
 import tech.talci.talcistorespring.model.Category;
 import tech.talci.talcistorespring.repositories.CategoryRepository;
 
@@ -56,5 +57,13 @@ public class CategoryService {
     @Transactional
     public void deleteById(Long id) {
         categoryRepository.deleteById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public CategoryDto findById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category was not found ID: " + id));
+
+        return categoryMapper.mapToCategoryDto(category);
     }
 }
