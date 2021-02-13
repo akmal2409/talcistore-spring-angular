@@ -46,7 +46,7 @@ export class AuthService {
         tap((data: AuthResponse) => {
           this.localStorage.store('expiresAt', data.expiresAt);
           this.localStorage.store('refreshToken', data.refreshToken);
-          this.localStorage.store('token', data.token);
+          this.localStorage.store('authenticationToken', data.token);
           this.localStorage.store('username', data.username);
           this.loggedIn.next(true);
         })
@@ -65,7 +65,7 @@ export class AuthService {
       )
       .pipe(
         tap((data: AuthResponse) => {
-          this.localStorage.store('token', data.token);
+          this.localStorage.store('authenticationToken', data.token);
           this.loggedIn.next(true);
         })
       );
@@ -81,7 +81,7 @@ export class AuthService {
       refreshTokenRequest
     );
 
-    this.localStorage.clear('token');
+    this.localStorage.clear('authenticationToken');
     this.localStorage.clear('username');
     this.localStorage.clear('refreshToken');
     this.localStorage.clear('expiresAt');
@@ -89,7 +89,7 @@ export class AuthService {
   }
 
   getJwtToken(): string {
-    return this.localStorage.retrieve('token');
+    return this.localStorage.retrieve('authenticationToken');
   }
 
   getUsername(): string {
@@ -142,5 +142,11 @@ export class AuthService {
         }),
         catchError(() => of(null))
       );
+  }
+
+  getRoles(): Observable<{ description: string; id: number; name: string }[]> {
+    return this.http.get<{ description: string; id: number; name: string }[]>(
+      `${environment.apiUrl}/api/auth/roles`
+    );
   }
 }

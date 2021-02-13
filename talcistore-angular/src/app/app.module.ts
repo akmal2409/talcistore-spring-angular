@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { HeaderComponent } from './main/header/header.component';
@@ -22,6 +22,8 @@ import { NgRatingModule } from 'd-ng-rating';
 import { MatCarouselModule } from '@ngbmodule/material-carousel';
 import { ProductComponent } from './main/products/product/product.component';
 import { ProductsComponent } from './main/products/products.component';
+import { AdminComponent } from './admin/admin.component';
+import { TokenInterceptor } from './auth/token-interceptor';
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +37,7 @@ import { ProductsComponent } from './main/products/products.component';
     ProductListComponent,
     ProductComponent,
     ProductsComponent,
+    AdminComponent,
   ],
   imports: [
     BrowserModule,
@@ -53,7 +56,13 @@ import { ProductsComponent } from './main/products/products.component';
     NgRatingModule,
     MatCarouselModule.forRoot(),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
