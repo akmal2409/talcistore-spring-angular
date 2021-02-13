@@ -53,4 +53,24 @@ export class ProductComponent implements OnInit {
       return 0;
     }
   }
+
+  isProductOnSale(): boolean {
+    if (!this.product.discount) {
+      return false;
+    }
+
+    const validFrom = new Date(this.product.discount.validFrom);
+    const validUntil = new Date(this.product.discount.validUntil);
+    const now = new Date();
+
+    return now >= validFrom && now <= validUntil;
+  }
+
+  getDiscountedPrice(): string {
+    const newPrice =
+      this.product.pricePerUnit -
+      (this.product.pricePerUnit * this.product.discount.percent) / 100;
+
+    return newPrice.toFixed(2);
+  }
 }

@@ -6,6 +6,7 @@ import { SignupComponent } from './auth/signup/signup.component';
 import { VerificationComponent } from './auth/verification/verification.component';
 import { HomeComponent } from './main/home/home.component';
 import { LandingComponent } from './main/home/landing/landing.component';
+import { ProductsComponent } from './main/products/products.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,7 @@ const routes: Routes = [
         canActivate: [LogggedInGuard],
       },
       { path: 'verify-account/:token', component: VerificationComponent },
+      { path: 'by-category/:id/products', component: ProductsComponent },
     ],
   },
 ];

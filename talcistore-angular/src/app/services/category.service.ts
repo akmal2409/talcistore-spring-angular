@@ -15,4 +15,10 @@ export class CategoryService {
       `${environment.apiUrl}/api/categories`
     );
   }
+
+  fetchCategoryById(id: number): Observable<CategoryModel> {
+    return this.http.get<CategoryModel>(
+      `${environment.apiUrl}/api/categories/` + id
+    );
+  }
 }

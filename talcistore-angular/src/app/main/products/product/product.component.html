@@ -16,7 +16,12 @@
     ></d-ng-rating>
     <div class="price-box">
       <div class="price">
-        <span>{{ product.pricePerUnit }}</span>
+        <span [ngClass]="{ 'old-price': isProductOnSale() }">{{
+          product.pricePerUnit
+        }}</span>
+        <span class="new-price" *ngIf="isProductOnSale()">{{
+          getDiscountedPrice()
+        }}</span>
         <mat-icon>euro_symbol</mat-icon>
       </div>
       <div>

@@ -2,6 +2,9 @@ mat-card {
   margin-top: 1rem;
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   mat-card-header {
     display: flex;
@@ -23,8 +26,22 @@ mat-card {
       display: flex;
       justify-content: flex-start;
 
+      span {
+        margin-top: 0.1rem;
+        margin-right: 0.2rem;
+      }
+
       mat-icon {
         padding-left: 0.2rem;
+      }
+
+      .old-price {
+        text-decoration: line-through;
+        @apply text-indigo-500 opacity-90;
+      }
+
+      .new-price {
+        @apply text-red-600 font-semibold;
       }
     }
   }
@@ -33,6 +50,10 @@ mat-card {
     display: flex;
     justify-content: space-around;
     @apply mt-2;
+  }
+
+  .shipping {
+    margin-top: 0.1rem;
   }
 }
 

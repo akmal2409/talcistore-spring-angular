@@ -21,7 +21,7 @@ import { ProductListComponent } from './main/products/product-list/product-list.
 import { NgRatingModule } from 'd-ng-rating';
 import { MatCarouselModule } from '@ngbmodule/material-carousel';
 import { ProductComponent } from './main/products/product/product.component';
-
+import { ProductsComponent } from './main/products/products.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,6 +34,7 @@ import { ProductComponent } from './main/products/product/product.component';
     CapitalizePipe,
     ProductListComponent,
     ProductComponent,
+    ProductsComponent,
   ],
   imports: [
     BrowserModule,

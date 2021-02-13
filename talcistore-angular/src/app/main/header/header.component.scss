@@ -102,6 +102,7 @@ nav {
   }
 }
 
-mat-auto-complete {
-  margin-top: 2rem;
+::ng-deep .mat-autocomplete-panel {
+  margin-top: 0.3rem;
+  border-radius: 10px;
 }

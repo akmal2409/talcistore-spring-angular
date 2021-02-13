@@ -29,7 +29,7 @@
         *ngFor="let category of categories"
         mat-list-item
         (click)="close()"
-        [routerLink]="['/category', category.id, 'products']"
+        [routerLink]="['/by-category', category.id, 'products']"
         >{{ category.categoryName }}</a
       >
     </mat-nav-list>

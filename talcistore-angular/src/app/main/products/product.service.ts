@@ -21,11 +21,32 @@ export class ProductService {
     );
   }
 
+  fetchProductsByCategory(
+    pageIndex: number,
+    pageSize: number,
+    categoryId: number,
+    filter: string
+  ): Observable<any> {
+    let params = this.getPaginationParams(pageIndex, pageSize);
+
+    if (filter !== null) {
+      params = params.append('filter', filter);
+    }
+
+    return this.http.get<PageResponseModel<ProductModel>>(
+      `${environment.apiUrl}/api/products/by-category/` + categoryId,
+      {
+        params: params,
+      }
+    );
+  }
+
   fetchTopRated(pageIndex: number, pageSize: number): Observable<any> {
-    const params = this.getPaginationParams(pageIndex, pageSize);
+    let params = this.getPaginationParams(pageIndex, pageSize);
+    params = params.append('filter', 'rating:desc');
 
     return this.http.get<ProductModel[]>(
-      `${environment.apiUrl}/api/products/top-rated`,
+      `${environment.apiUrl}/api/products/`,
       {
         params: params,
       }
