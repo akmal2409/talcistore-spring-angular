@@ -29,17 +29,6 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(new ApiError(BAD_REQUEST, error, ex));
     }
 
-    @ExceptionHandler(DisabledException.class)
-    protected ResponseEntity<Object> handleUserDisabled(DisabledException ex,
-                                                        HttpHeaders headers,
-                                                        HttpStatus status,
-                                                        WebRequest request) {
-        String error = "Account is disabled or was not verified";
-        ApiError apiError = new ApiError(FORBIDDEN, error, ex);
-        return buildResponseEntity(apiError);
-    }
-
-
     private ResponseEntity<Object> buildResponseEntity(ApiError apiError) {
         return new ResponseEntity<>(apiError, apiError.getStatus());
     }
