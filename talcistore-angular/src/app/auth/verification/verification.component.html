@@ -25,7 +25,10 @@
         *ngIf="showSpinner"
         [color]="'accent'"
       ></mat-spinner>
-      <a [routerLink]="['/login']" mat-button *ngIf="success && !showSpinner"
+      <a
+        [routerLink]="['/auth/login']"
+        mat-button
+        *ngIf="success && !showSpinner"
         >Login</a
       >
     </mat-card-content>

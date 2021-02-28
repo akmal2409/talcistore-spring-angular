@@ -1,0 +1,24 @@
+.sidenav {
+  width: 300px;
+}
+
+.btn-wrapper {
+  width: 100%;
+  height: 50px;
+  position: relative;
+  @apply block md:hidden;
+}
+
+.close-sidenav-btn {
+  position: absolute;
+  right: 0%;
+
+  width: 50px;
+  margin-right: 1rem;
+  font-size: 3rem;
+  @apply block text-red-600 md:hidden;
+
+  fa-icon {
+    display: inline-block;
+  }
+}

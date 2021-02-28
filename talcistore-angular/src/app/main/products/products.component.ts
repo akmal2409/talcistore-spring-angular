@@ -13,7 +13,7 @@ import { ProductService } from './product.service';
 export class ProductsComponent implements OnInit {
   categoryMode: boolean;
   searchMode: boolean;
-  category?: CategoryModel;
+  category: CategoryModel;
   products: ProductModel[];
 
   constructor(
@@ -35,6 +35,7 @@ export class ProductsComponent implements OnInit {
         .fetchCategoryById(categoryId)
         .subscribe((category: CategoryModel) => {
           this.category = category;
+          console.log(this.category);
         });
     });
 

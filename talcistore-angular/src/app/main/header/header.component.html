@@ -36,12 +36,16 @@
 
     <div class="nav-links md:flex md:flex-row items-center hidden">
       <ng-container *ngIf="!isLoggedIn">
-        <a style="font-size: 1rem" [routerLink]="['/login']" [routerLinkActive]>
+        <a
+          style="font-size: 1rem"
+          [routerLink]="['/auth/login']"
+          [routerLinkActive]
+        >
           Login
         </a>
         <a
           style="font-size: 1rem"
-          [routerLink]="['/sign-up']"
+          [routerLink]="['/auth/sign-up']"
           [routerLinkActive]
         >
           Sign Up
