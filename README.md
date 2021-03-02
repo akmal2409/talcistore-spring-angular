@@ -17,7 +17,7 @@ This is one of my latest projects that I have been building, it all started when
 # Future Plans and Improvements
 * Move it to Microservice architecture with Spring Cloud
 * Change existing authentication and authorization with plain JWT to OAuth2.0 supporting 3rd party access.
-* Deploy it on AWS 
+* Deploy it on AWS in EKS as a microservice
 * More TBA
 
 # Clone repository
